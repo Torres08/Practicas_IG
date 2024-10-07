@@ -24,44 +24,43 @@
 
 =======================================================
 
-	 modelo.h
+	visual.h
 */
 
-#ifndef MODELO_H
-#define MODELO_H
 
-/**
-	Funcion de redibujado. Se ejecuta con los eventos postRedisplay
+
+//======================== visual.c
+
+
+/** 	void setCamara()
+
+Cambia los parámetros de la cámara en el modulo visual
+
 **/
-void Dibuja (void);
+void setCamara (float ax, float ay, float az, float d);
 
-/**
-	Funcion de fondo
+void getCamara (float &ax, float &ay, float &az, float &d);
+
+/** 	void transformacionVisualizacion()
+
+Fija la transformacion de visualizacion en funcion de los angulos de rotacion view_rotx,
+view_roty y view_rotz y el desplazamiento de la camara d.
+
 **/
-void idle (int v);
+void transformacionVisualizacion ();
 
-/**
-	Funcion de inicializacion del modelo y de las variables globales
+/**	void fijaProyeccion()
+
+Fija la transformacion de proyeccion en funcion del tamaño de la ventana y del tipo de proyeccion
+
 **/
-void initModel ();
+void fijaProyeccion ();
 
-/**
-   Funcionalidades modo
+
+/**	void inicializaVentana(GLsizei ancho,GLsizei alto)
+
+Inicializa el viewport para que ocupe toda la ventana X, y llama a fijaProyeccion.
+
 **/
 
-void setModo(int M);
-
-void setIluminacion(int estado);
-
-int getIluminacion();
-
-class Objeto3D 
-{ 
-public: 
-
-virtual void draw( ) = 0; // Dibuja el objeto
-} ; 
-
-#endif // MODELO_H
-
-
+void inicializaVentana (GLsizei ancho, GLsizei alto);

@@ -1,13 +1,13 @@
 /*	Prácticas de Informática Gráfica
 
 	Grupos C y D				Curso 2023-24
- 	
+
 	Codigo base para la realización de las practicas de IG
-	
-	Estudiante: 
+
+	Estudiante:
 
 =======================================================
-	G. Arroyo, J.C. Torres 
+	G. Arroyo, J.C. Torres
 	Dpto. Lenguajes y Sistemas Informticos
 	(Univ. de Granada)
 
@@ -19,49 +19,23 @@
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details 
+ GNU General Public License for more details
  http://www.gnu.org/copyleft/gpl.html
 
 =======================================================
 
-	 modelo.h
+	 mouse.c
 */
 
-#ifndef MODELO_H
-#define MODELO_H
+#ifndef __mouseH__ // Para evitar doble inclusion
+#define __mouseH__
 
-/**
-	Funcion de redibujado. Se ejecuta con los eventos postRedisplay
-**/
-void Dibuja (void);
 
-/**
-	Funcion de fondo
-**/
-void idle (int v);
+void clickRaton( int boton, int estado, int x, int y );
 
-/**
-	Funcion de inicializacion del modelo y de las variables globales
-**/
-void initModel ();
 
-/**
-   Funcionalidades modo
-**/
+void RatonMovido( int x, int y );
 
-void setModo(int M);
 
-void setIluminacion(int estado);
-
-int getIluminacion();
-
-class Objeto3D 
-{ 
-public: 
-
-virtual void draw( ) = 0; // Dibuja el objeto
-} ; 
-
-#endif // MODELO_H
-
+#endif
 

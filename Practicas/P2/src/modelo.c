@@ -35,27 +35,28 @@ modulo modelo.c
 #include <math.h>
 #include <GL/glut.h> // Libreria de utilidades de OpenGL
 #include "practicasIG.h"
+#include <vector>
 #include "modelo.h"
+#include "MiMalla.h"
 
 /**	void initModel()
 
 Inicializa el modelo y de las variables globales
 
-
 **/
 void initModel()
 {
-  /*
+
   glEnable(GL_DEPTH_TEST); // Habilitar el depth test
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
-  */
+
+  //glShadeModel(GL_SMOOTH);
 }
 
 /*
   Cambiar modo
 */
-
 
 int modo = GL_FILL;
 int iluminacion = 1;
@@ -66,6 +67,7 @@ void setModo(int M)
   glPolygonMode(GL_FRONT_AND_BACK, modo);
 }
 
+// no funciona para miMalla
 int getIluminacion()
 {
   return iluminacion;
@@ -83,6 +85,51 @@ void setIluminacion(int estado)
     glDisable(GL_LIGHTING); // Desactiva la iluminación
   }
 }
+
+// sombreado coche: N
+
+int sombreado = 1;
+
+int getSombreado()
+{
+  return sombreado;
+}
+
+void setSombreado(int estado)
+{
+  sombreado = estado;
+  if (estado)
+  {
+    glShadeModel(GL_FLAT);
+  }
+  else
+  {
+    glShadeModel(GL_SMOOTH);
+  }
+}
+
+// sombreado cubo: M
+
+int sombreado2 = 0;
+
+int getSombreado2()
+{
+  return sombreado2;
+}
+
+void setSombreado2(int estado)
+{
+  sombreado2 = estado;
+  if (estado)
+  {
+    glShadeModel(GL_FLAT);
+  }
+  else
+  {
+    glShadeModel(GL_SMOOTH);
+  }
+}
+
 
 class Ejes : Objeto3D
 {
@@ -108,13 +155,13 @@ public:
     }
     glEnd();
 
-    //glEnable(GL_LIGHTING);
-    // condicion aqui
+    // glEnable(GL_LIGHTING);
+    //  condicion aqui
 
-    if (modo == GL_FILL && getIluminacion()){
+    if (modo == GL_FILL && getIluminacion())
+    {
       glEnable(GL_LIGHTING);
     }
-      
   }
 };
 
@@ -123,7 +170,7 @@ Ejes ejesCoordenadas;
 // MiCubo
 // glColor3f(1.0f, 0.0f, 1.0f);  // Magenta
 
-class MiCubo
+class MiCubo : Objeto3D
 {
 public:
   float lado;
@@ -136,8 +183,8 @@ public:
   void draw()
   {
 
-    //GLfloat color[4] = {1.0f, 0.0f, 1.0f, 1.0f}; // Magenta
-    //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
+    // GLfloat color[4] = {1.0f, 0.0f, 1.0f, 1.0f}; // Magenta
+    // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
 
     glBegin(GL_QUADS);
     {
@@ -190,7 +237,7 @@ public:
 MiCubo cubo1(1.0f);
 
 // MiPiramide
-class MiPiramide
+class MiPiramide : Objeto3D
 {
 public:
   float lado;
@@ -235,8 +282,8 @@ public:
 
   void draw()
   {
-    //GLfloat color[4] = {0.0f, 1.0f, 1.0f, 1.0f}; // Cyan
-    //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
+    // GLfloat color[4] = {0.0f, 1.0f, 1.0f, 1.0f}; // Cyan
+    // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
 
     float Cx = lado / 2.0f;
     float Cy = alto;
@@ -293,6 +340,9 @@ Procedimiento de dibujo del modelo. Es llamado por glut cada vez que se debe red
 
 **/
 
+MiMalla malla("./recursos/big_dodge.ply");
+MiMalla malla2("./recursos/cubo.ply");
+
 void Dibuja(void)
 {
   static GLfloat pos[4] = {5.0, 5.0, 10.0, 0.0}; // Posicion de la fuente de luz
@@ -306,35 +356,71 @@ void Dibuja(void)
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Inicializa el buffer de color y el Z-Buffer
 
+  // sombreado
+  //setSombreado(sombreado);
+  //setSombreado2(sombreado2);
+
   //
-  if (modo == GL_FILL && getIluminacion()) {
-        glEnable(GL_LIGHTING);
-  } else {
-        glDisable(GL_LIGHTING);
+  if (modo == GL_FILL && getIluminacion())
+  {
+    glEnable(GL_LIGHTING);
+  }
+  else
+  {
+    glDisable(GL_LIGHTING);
   }
 
   // ejesCoordenadas.draw(); // Dibuja los ejes
 
+  //glLightfv(GL_LIGHT0, GL_POSITION, pos); // Declaracion de luz. Colocada aqui esta fija en la escena
+
   transformacionVisualizacion(); // Carga transformacion de visualizacion
-  ejesCoordenadas.draw(); // Dibuja los ejes
+  ejesCoordenadas.draw();        // Dibuja los ejes
 
   glLightfv(GL_LIGHT0, GL_POSITION, pos); // Declaracion de luz. Colocada aqui esta fija en la escena
-  //ejesCoordenadas.draw(); // Dibuja los ejes
 
-
+  /*
   GLfloat color3[4] = {1.0f, 0.0f, 1.0f, 1.0f}; // Magenta
   glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color3);
   cubo1.draw(); // dibujo el cubo
+   //cubo1.draw(); // dibujo el cubo
 
   glTranslatef(1.2, 0, 0);
+
+
 
   GLfloat color2[4] = {0.0f, 1.0f, 1.0f, 1.0f}; // Cyan
   glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color2);
   piramide1.draw();
+  */
 
-  // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
 
-  glPopMatrix();     // Desapila la transformacion geometrica
+  // coche
+  glPushMatrix();
+  glScalef(0.5, 0.5, 0.5);
+  GLfloat color2[4] = {1.0f, 0.0f, 0.0f, 1.0f}; // Red
+  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color2);
+  if (sombreado) {
+        malla.drawSmooth(); // Dibuja con sombreado suave
+    } else {
+        malla.drawFlat(); // Dibuja con sombreado plano
+  }
+  glPopMatrix();
+
+  // cubo
+  glPushMatrix();
+  glTranslatef(5, 0, 0);
+  GLfloat color3[4] = {0.5f, 0.0f, 0.5f, 1.0f}; // Violet
+  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color3);
+  if (sombreado2) {
+        malla2.drawSmooth(); // Dibuja con sombreado suave
+    } else {
+        malla2.drawFlat(); // Dibuja con sombreado plano
+  }
+  glPopMatrix();
+
+
+  glPopMatrix();
   glutSwapBuffers(); // Intercambia el buffer de dibujo y visualizacion
 }
 

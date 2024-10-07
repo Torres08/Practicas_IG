@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "cmath": "cpp",
+        "practicasig.h": "c",
+        "file_ply_stl.h": "c",
+        "mimalla.h": "c"
+    }
+}

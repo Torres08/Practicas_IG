@@ -55,6 +55,14 @@ void setIluminacion(int estado);
 
 int getIluminacion();
 
+void setSombreado(int estado);
+
+int getSombreado();
+
+void setSombreado2(int estado);
+
+int getSombreado2();
+
 class Objeto3D 
 { 
 public: 

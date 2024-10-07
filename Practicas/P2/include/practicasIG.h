@@ -24,44 +24,11 @@
 
 =======================================================
 
-	 modelo.h
+	practicasIG.h
 */
 
-#ifndef MODELO_H
-#define MODELO_H
-
-/**
-	Funcion de redibujado. Se ejecuta con los eventos postRedisplay
-**/
-void Dibuja (void);
-
-/**
-	Funcion de fondo
-**/
-void idle (int v);
-
-/**
-	Funcion de inicializacion del modelo y de las variables globales
-**/
-void initModel ();
-
-/**
-   Funcionalidades modo
-**/
-
-void setModo(int M);
-
-void setIluminacion(int estado);
-
-int getIluminacion();
-
-class Objeto3D 
-{ 
-public: 
-
-virtual void draw( ) = 0; // Dibuja el objeto
-} ; 
-
-#endif // MODELO_H
-
-
+#include  "modelo.h"
+#include  "mouse.h"
+#include  "entradaTeclado.h"
+#include  "visual.h"
+#include  "file_ply_stl.h"

@@ -88,6 +88,27 @@ void letra (unsigned char k, int x, int y)
 
   switch (k)
     {
+    case 'p':  
+    case 'P': // punto
+      setModo(GL_POINT);
+      break;
+
+    case 'l':  
+    case 'L': //linea
+      setModo(GL_LINE);
+      break;
+    
+    case 'f':
+    case 'F': //relleno
+      setModo(GL_FILL);
+      break;
+    
+    case 'i':
+    case 'I': //activar desactivar iluminacion
+      setIluminacion(!getIluminacion());
+      printf("iluminacion: %d\n", getIluminacion());
+      break;
+
     case 'h':
     case 'H':
       printHelp ();		// H y h imprimen ayuda
@@ -103,7 +124,7 @@ void letra (unsigned char k, int x, int y)
     default:
       return;
     }
-  setCamara (rotxCamara, rotyCamara, 0.0, dCamara);
+  //setCamara (rotxCamara, rotyCamara, 0.0, dCamara);
   glutPostRedisplay ();		// Algunas de las opciones cambian paramentros
 }				// de la camara. Es necesario actualziar la imagen
 
