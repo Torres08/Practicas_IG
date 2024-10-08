@@ -46,33 +46,37 @@ Inicializa el modelo y de las variables globales
 **/
 void initModel()
 {
-
   glEnable(GL_DEPTH_TEST); // Habilitar el depth test
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
-
-  //glShadeModel(GL_SMOOTH);
 }
-
-/*
-  Cambiar modo
-*/
 
 int modo = GL_FILL;
 int iluminacion = 1;
 
+/**
+ * @brief Poner el modo de dibujo
+ */
 void setModo(int M)
 {
   modo = M;
   glPolygonMode(GL_FRONT_AND_BACK, modo);
 }
 
-// no funciona para miMalla
+/**
+ * @brief Obtiene el valor de la iluminación.
+ * @return El valor de la iluminación.
+ */
 int getIluminacion()
 {
   return iluminacion;
 }
 
+/**
+ * @brief Configura el estado de la iluminación.
+ * @param estado Un entero que indica el estado de la iluminación.
+ *               Si es 1, la iluminación se activa. Si es 0, la iluminación se desactiva.
+ */
 void setIluminacion(int estado)
 {
   iluminacion = estado;
@@ -86,51 +90,83 @@ void setIluminacion(int estado)
   }
 }
 
-// sombreado coche: N
+// Variables globales para sombreado del coche y cubo
+// 1 smooth 0 flat 
+int sombreadoCoche = 1;
+int sombreadoCubo = 0;
 
-int sombreado = 1;
-
-int getSombreado()
+/**
+ * @brief Obtiene el valor del sombreado de un objeto.
+ *
+ * @param sombreadoObjeto Referencia al valor del sombreado del objeto.
+ * @return El valor del sombreado del objeto. Coche o Cubo
+ */
+int getSombreado(int &sombreadoObjeto)
 {
-  return sombreado;
+  return sombreadoObjeto;
 }
 
-void setSombreado(int estado)
+/**
+ * @brief Configura el estado de sombreado de un objeto.
+ *
+ * @param sombreadoObjeto Referencia al valor del sombreado del objeto.
+ * @param estado Un entero que indica el estado del sombreado.
+ *               Si es 1, el sombreado es plano. Si es 0, el sombreado es suave.
+ */
+void setSombreado(int &sombreadoObjeto, int estado)
 {
-  sombreado = estado;
+  sombreadoObjeto = estado;
   if (estado)
   {
-    glShadeModel(GL_FLAT);
+    glShadeModel(GL_FLAT); // plano
   }
   else
   {
-    glShadeModel(GL_SMOOTH);
+    glShadeModel(GL_SMOOTH); // suave
   }
 }
 
-// sombreado cubo: M
-
-int sombreado2 = 0;
-
-int getSombreado2()
+/**
+ * @brief Obtiene el valor del sombreado del coche.
+ * @return El valor del sombreado del coche.
+ */
+int getSombreadoCoche()
 {
-  return sombreado2;
+  return getSombreado(sombreadoCoche);
 }
 
-void setSombreado2(int estado)
+/**
+ * @brief Configura el estado de sombreado del coche.
+ * @param estado Un entero que indica el estado del sombreado.
+ *               Si es 1, el sombreado es plano. Si es 0, el sombreado es suave.
+ */
+void setSombreadoCoche(int estado)
 {
-  sombreado2 = estado;
-  if (estado)
-  {
-    glShadeModel(GL_FLAT);
-  }
-  else
-  {
-    glShadeModel(GL_SMOOTH);
-  }
+  setSombreado(sombreadoCoche, estado);
 }
 
+/**
+ * @brief Obtiene el valor del sombreado del cubo.
+ * @return El valor del sombreado del cubo.
+ */
+int getSombreadoCubo()
+{
+  return getSombreado(sombreadoCubo);
+}
 
+/**
+ * @brief Configura el estado de sombreado del cubo.
+ * @param estado Un entero que indica el estado del sombreado.
+ *               Si es 1, el sombreado es plano. Si es 0, el sombreado es suave.
+ */
+void setSombreadoCubo(int estado)
+{
+  setSombreado(sombreadoCubo, estado);
+}
+
+/**
+ * @brief Clase Eje
+ */
 class Ejes : Objeto3D
 {
 public:
@@ -167,9 +203,9 @@ public:
 
 Ejes ejesCoordenadas;
 
-// MiCubo
-// glColor3f(1.0f, 0.0f, 1.0f);  // Magenta
-
+/**
+ * @brief Clase Cubo
+ */
 class MiCubo : Objeto3D
 {
 public:
@@ -182,9 +218,6 @@ public:
 
   void draw()
   {
-
-    // GLfloat color[4] = {1.0f, 0.0f, 1.0f, 1.0f}; // Magenta
-    // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
 
     glBegin(GL_QUADS);
     {
@@ -236,7 +269,9 @@ public:
 
 MiCubo cubo1(1.0f);
 
-// MiPiramide
+/**
+ * @brief Clase Piramide
+ */
 class MiPiramide : Objeto3D
 {
 public:
@@ -282,9 +317,6 @@ public:
 
   void draw()
   {
-    // GLfloat color[4] = {0.0f, 1.0f, 1.0f, 1.0f}; // Cyan
-    // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
-
     float Cx = lado / 2.0f;
     float Cy = alto;
     float Cz = lado / 2.0f;
@@ -340,8 +372,8 @@ Procedimiento de dibujo del modelo. Es llamado por glut cada vez que se debe red
 
 **/
 
-MiMalla malla("./recursos/big_dodge.ply");
-MiMalla malla2("./recursos/cubo.ply");
+MiMalla mallaCoche("./recursos/big_dodge.ply");
+MiMalla mallaCubo("./recursos/cubo.ply");
 
 void Dibuja(void)
 {
@@ -356,11 +388,7 @@ void Dibuja(void)
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Inicializa el buffer de color y el Z-Buffer
 
-  // sombreado
-  //setSombreado(sombreado);
-  //setSombreado2(sombreado2);
-
-  //
+  // Manejamos la luz
   if (modo == GL_FILL && getIluminacion())
   {
     glEnable(GL_LIGHTING);
@@ -370,55 +398,56 @@ void Dibuja(void)
     glDisable(GL_LIGHTING);
   }
 
-  // ejesCoordenadas.draw(); // Dibuja los ejes
-
-  //glLightfv(GL_LIGHT0, GL_POSITION, pos); // Declaracion de luz. Colocada aqui esta fija en la escena
-
   transformacionVisualizacion(); // Carga transformacion de visualizacion
   ejesCoordenadas.draw();        // Dibuja los ejes
 
   glLightfv(GL_LIGHT0, GL_POSITION, pos); // Declaracion de luz. Colocada aqui esta fija en la escena
 
   /*
-  GLfloat color3[4] = {1.0f, 0.0f, 1.0f, 1.0f}; // Magenta
-  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color3);
-  cubo1.draw(); // dibujo el cubo
-   //cubo1.draw(); // dibujo el cubo
+    // Practica 1: Dibujamos Triangulo y
 
-  glTranslatef(1.2, 0, 0);
+    GLfloat color3[4] = {1.0f, 0.0f, 1.0f, 1.0f}; // Magenta
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color3);
+    cubo1.draw(); // dibujo el cubo
+    //cubo1.draw(); // dibujo el cubo
 
+    glTranslatef(1.2, 0, 0);
 
+    GLfloat color2[4] = {0.0f, 1.0f, 1.0f, 1.0f}; // Cyan
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color2);
+    piramide1.draw();
 
-  GLfloat color2[4] = {0.0f, 1.0f, 1.0f, 1.0f}; // Cyan
-  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color2);
-  piramide1.draw();
   */
 
-
-  // coche
+  // Dibujamos el coche 
   glPushMatrix();
   glScalef(0.5, 0.5, 0.5);
   GLfloat color2[4] = {1.0f, 0.0f, 0.0f, 1.0f}; // Red
   glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color2);
-  if (sombreado) {
-        malla.drawSmooth(); // Dibuja con sombreado suave
-    } else {
-        malla.drawFlat(); // Dibuja con sombreado plano
+  if (sombreadoCoche)
+  {
+    mallaCoche.drawSmooth(); // Dibuja con sombreado suave
+  }
+  else
+  {
+    mallaCoche.drawFlat(); // Dibuja con sombreado plano
   }
   glPopMatrix();
 
-  // cubo
+  // Dibujamos el cubo
   glPushMatrix();
   glTranslatef(5, 0, 0);
   GLfloat color3[4] = {0.5f, 0.0f, 0.5f, 1.0f}; // Violet
   glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color3);
-  if (sombreado2) {
-        malla2.drawSmooth(); // Dibuja con sombreado suave
-    } else {
-        malla2.drawFlat(); // Dibuja con sombreado plano
+  if (sombreadoCubo)
+  {
+    mallaCubo.drawSmooth(); // Dibuja con sombreado suave
+  }
+  else
+  {
+    mallaCubo.drawFlat(); // Dibuja con sombreado plano
   }
   glPopMatrix();
-
 
   glPopMatrix();
   glutSwapBuffers(); // Intercambia el buffer de dibujo y visualizacion

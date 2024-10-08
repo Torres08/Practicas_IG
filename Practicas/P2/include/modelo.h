@@ -1,13 +1,13 @@
 /*	Prácticas de Informática Gráfica
 
 	Grupos C y D				Curso 2023-24
- 	
+
 	Codigo base para la realización de las practicas de IG
-	
-	Estudiante: 
+
+	Estudiante:
 
 =======================================================
-	G. Arroyo, J.C. Torres 
+	G. Arroyo, J.C. Torres
 	Dpto. Lenguajes y Sistemas Informticos
 	(Univ. de Granada)
 
@@ -19,7 +19,7 @@
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details 
+ GNU General Public License for more details
  http://www.gnu.org/copyleft/gpl.html
 
 =======================================================
@@ -33,21 +33,17 @@
 /**
 	Funcion de redibujado. Se ejecuta con los eventos postRedisplay
 **/
-void Dibuja (void);
+void Dibuja(void);
 
 /**
 	Funcion de fondo
 **/
-void idle (int v);
+void idle(int v);
 
 /**
 	Funcion de inicializacion del modelo y de las variables globales
 **/
-void initModel ();
-
-/**
-   Funcionalidades modo
-**/
+void initModel();
 
 void setModo(int M);
 
@@ -55,21 +51,21 @@ void setIluminacion(int estado);
 
 int getIluminacion();
 
-void setSombreado(int estado);
+void setSombreadoCoche(int estado);
 
-int getSombreado();
+int getSombreadoCoche();
 
-void setSombreado2(int estado);
+void setSombreadoCubo(int estado);
 
-int getSombreado2();
+int getSombreadoCubo();
 
-class Objeto3D 
-{ 
-public: 
-
-virtual void draw( ) = 0; // Dibuja el objeto
-} ; 
+/**
+ * @brief Clase objeto 3D
+ */
+class Objeto3D
+{
+public:
+	virtual void draw() = 0; // Dibuja el objeto
+};
 
 #endif // MODELO_H
-
-

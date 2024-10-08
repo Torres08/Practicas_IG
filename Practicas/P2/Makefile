@@ -49,6 +49,14 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cc
 clean:
 	rm -rf $(OBJDIR) $(EJECUTABLE)
 
+# Regla para ejecutar el programa
+ejecutar: $(EJECUTABLE)
+	./$(EJECUTABLE)
+
+# Regla para hacer limpieza y ejecutar
+total: clean ejecutar
+
+
 .PHONY: clean
 
 

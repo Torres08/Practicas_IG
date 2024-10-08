@@ -86,14 +86,14 @@ void letra(unsigned char k, int x, int y)
 
   case 'n':
   case 'N': // punto
-    setSombreado(!getSombreado());
-    printf("Sombreado: %d\n", getSombreado());
+    setSombreadoCoche(!getSombreadoCoche());
+    printf("Sombreado Coche: %d\n", getSombreadoCoche());
     break; 
 
   case 'm':
   case 'M': // punto
-    setSombreado2(!getSombreado2());
-    printf("Sombreado 2: %d\n", getSombreado2());
+    setSombreadoCubo(!getSombreadoCubo());
+    printf("Sombreado Cubo: %d\n", getSombreadoCubo());
     break;   
 
   case 'p':

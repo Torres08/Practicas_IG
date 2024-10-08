@@ -1,11 +1,22 @@
+/**
+ * @file MiMalla.cc
+ * @brief Implementación de la clase MiMalla
+ * @author Torres Ramos, Juan Luis
+ */
 
 #include "MiMalla.h"
 #include "file_ply_stl.h"
 #include "modelo.h"
-
 using namespace std;
 
-// Constructor, usar read de file_pñy_stl
+/**
+ * @brief Constructor de la clase MiMalla.
+ *
+ * Este constructor inicializa la malla leyendo los datos de vértices y triángulos desde un archivo PLY.
+ * Luego, agrega los vértices y triángulos a la malla y calcula las normales.
+ *
+ * @param filename La ruta al archivo PLY que contiene los datos de la malla.
+ */
 MiMalla::MiMalla(const char *filename)
 {
     vector<float> temp_vertices;
@@ -27,6 +38,13 @@ MiMalla::MiMalla(const char *filename)
     this->calcularNormales();
 }
 
+/**
+ * @brief Agrega un vértice a la malla.
+ *
+ * @param x Coordenada x del vértice.
+ * @param y Coordenada y del vértice.
+ * @param z Coordenada z del vértice.
+ */
 void MiMalla::addVertice(float x, float y, float z)
 {
     Vertice v;
@@ -36,6 +54,13 @@ void MiMalla::addVertice(float x, float y, float z)
     vertices.push_back(v);
 }
 
+/**
+ * @brief Añade un triángulo a la malla.
+ *
+ * @param v1 Índice del primer vértice del triángulo.
+ * @param v2 Índice del segundo vértice del triángulo.
+ * @param v3 Índice del tercer vértice del triángulo.
+ */
 void MiMalla::addTriangulo(int v1, int v2, int v3)
 {
     Triangulo t;
@@ -45,49 +70,11 @@ void MiMalla::addTriangulo(int v1, int v2, int v3)
     triangulos.push_back(t);
 }
 
-void MiMalla::draw() {
 
-    // Establece el modo de sombreado aquí si es necesario (opcional)
-    glShadeModel(GL_SMOOTH); // Sombreado suave
-    
-    // Inicia el dibujo de triángulos
-    glBegin(GL_TRIANGLES);
-    
-    for (size_t i = 0; i < triangulos.size(); i++) {
-        // Obtengo el triángulo
-        Triangulo t = triangulos[i];
 
-        // Obtengo los vértices
-        Vertice v1 = vertices[t.v1];
-        Vertice v2 = vertices[t.v2];
-        Vertice v3 = vertices[t.v3];
-
-        // Normal del triángulo
-        Normal n = normalesTriangulos[i];
-
-        // Dibujo
-        glNormal3f(n.x, n.y, n.z); // Establece la normal para el triángulo
-        glVertex3f(v1.x, v1.y, v1.z); // Vértice 1
-        glVertex3f(v2.x, v2.y, v2.z); // Vértice 2
-        glVertex3f(v3.x, v3.y, v3.z); // Vértice 3
-    }
-
-    glEnd(); // Finaliza el dibujo de triángulos
-}
-
-// PO X P1 | P0 X P2
-
-// normales Triangulo
-// se calculan a partir de los vertices de cada triangulo con el producto vectorial
-// triangulos = caras
-
-/*
-1. Inicializar normales de todos los vértices a (0, 0, 0)
-2. Para cada cara:
-• Sumar su normal a sus tres vértices
-3. Para cada vértice:
-• Normalizar su normal
-*/
+/**
+ * @brief Calcula las normales de los vértices y de los triángulos de la malla.
+ */
 void MiMalla::calcularNormales()
 {
     // 1. Inicializamos las normales (normalesVertices, normalesTriangulos) a 0
@@ -97,12 +84,12 @@ void MiMalla::calcularNormales()
     // 2. Calculamos las normales de los triángulos (caras)
     for (size_t i = 0; i < triangulos.size(); ++i)
     {
-        const Triangulo& t = triangulos[i];  // Usamos const porque no modificamos el triángulo
+        const Triangulo &t = triangulos[i]; // Usamos const porque no modificamos el triángulo
 
         // Obtenemos los vértices del triángulo
-        const Vertice& p0 = vertices[t.v1];
-        const Vertice& p1 = vertices[t.v2];
-        const Vertice& p2 = vertices[t.v3];
+        const Vertice &p0 = vertices[t.v1];
+        const Vertice &p1 = vertices[t.v2];
+        const Vertice &p2 = vertices[t.v3];
 
         // Calculamos los vectores de las aristas
         Vertice v1 = {p1.x - p0.x, p1.y - p0.y, p1.z - p0.z};
@@ -146,7 +133,7 @@ void MiMalla::calcularNormales()
     // 4. Normalizamos las normales de los vértices
     for (size_t i = 0; i < normalesVertices.size(); ++i)
     {
-        Normal& normal = normalesVertices[i]; // normal del vértice
+        Normal &normal = normalesVertices[i]; // normal del vértice
         float modulo = sqrt(normal.x * normal.x +
                             normal.y * normal.y +
                             normal.z * normal.z);
@@ -160,13 +147,16 @@ void MiMalla::calcularNormales()
     }
 }
 
-
-void MiMalla::drawFlat() {
-    glShadeModel(GL_FLAT); // Establecer el modo de sombreado plano
+/**
+ * @brief Dibuja la malla.
+ */
+void MiMalla::draw()
+{
 
     glBegin(GL_TRIANGLES); // Iniciar el dibujo de triángulos
 
-    for (size_t i = 0; i < triangulos.size(); i++) {
+    for (size_t i = 0; i < triangulos.size(); i++)
+    {
         Triangulo t = triangulos[i]; // Obtener el triángulo
 
         Vertice v1 = vertices[t.v1]; // Obtener los vértices
@@ -184,38 +174,51 @@ void MiMalla::drawFlat() {
         glVertex3f(v3.x, v3.y, v3.z);
     }
 
-    glEnd(); // Finalizar el dibujo
+    glEnd(); // Finalizar el dibujo 
 }
 
-void MiMalla::drawSmooth() {
+
+/**
+ * @brief Dibuja la malla con sombreado plano.
+ */
+void MiMalla::drawFlat()
+{
+    glShadeModel(GL_FLAT); 
+
+    this->draw();
+}
+
+/**
+ * @brief Dibuja la malla con sombreado suave
+ */
+void MiMalla::drawSmooth()
+{
     glShadeModel(GL_SMOOTH); // Establecer el modo de sombreado suave
 
-    glBegin(GL_TRIANGLES); // Iniciar el dibujo de triángulos
+    glBegin(GL_TRIANGLES); 
 
-    for (size_t i = 0; i < triangulos.size(); i++) {
-        Triangulo t = triangulos[i]; // Obtener el triángulo
+    for (size_t i = 0; i < triangulos.size(); i++)
+    {
+        Triangulo t = triangulos[i];
 
-        Vertice v1 = vertices[t.v1]; // Obtener los vértices
+        Vertice v1 = vertices[t.v1]; 
         Vertice v2 = vertices[t.v2];
         Vertice v3 = vertices[t.v3];
 
         // Establecer la normal para cada vértice
-        Normal n1 = normalesVertices[t.v1]; // Normal del vértice 1
-        Normal n2 = normalesVertices[t.v2]; // Normal del vértice 2
-        Normal n3 = normalesVertices[t.v3]; // Normal del vértice 3
+        Normal n1 = normalesVertices[t.v1]; 
+        Normal n2 = normalesVertices[t.v2]; 
+        Normal n3 = normalesVertices[t.v3]; 
 
-        glNormal3f(n1.x, n1.y, n1.z); // Normal para el vértice 1
-        glVertex3f(v1.x, v1.y, v1.z); // Dibujar el vértice 1
+        glNormal3f(n1.x, n1.y, n1.z); 
+        glVertex3f(v1.x, v1.y, v1.z); 
 
-        glNormal3f(n2.x, n2.y, n2.z); // Normal para el vértice 2
-        glVertex3f(v2.x, v2.y, v2.z); // Dibujar el vértice 2
+        glNormal3f(n2.x, n2.y, n2.z); 
+        glVertex3f(v2.x, v2.y, v2.z); 
 
-        glNormal3f(n3.x, n3.y, n3.z); // Normal para el vértice 3
-        glVertex3f(v3.x, v3.y, v3.z); // Dibujar el vértice 3
+        glNormal3f(n3.x, n3.y, n3.z); 
+        glVertex3f(v3.x, v3.y, v3.z); 
     }
 
-    glEnd(); // Finalizar el dibujo
+    glEnd(); 
 }
-
-
-
