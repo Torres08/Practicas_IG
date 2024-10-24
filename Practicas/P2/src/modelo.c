@@ -51,6 +51,8 @@ void initModel()
   glCullFace(GL_BACK);
 }
 
+
+
 int modo = GL_FILL;
 int iluminacion = 1;
 
@@ -91,7 +93,7 @@ void setIluminacion(int estado)
 }
 
 // Variables globales para sombreado del coche y cubo
-// 1 smooth 0 flat 
+// 1 smooth 0 flat
 int sombreadoCoche = 1;
 int sombreadoCubo = 0;
 
@@ -164,6 +166,18 @@ void setSombreadoCubo(int estado)
   setSombreado(sombreadoCubo, estado);
 }
 
+int numeroEscena = 2;
+
+void setEscena(int e)
+{
+  numeroEscena = e;
+}
+
+int getEscena()
+{
+  return numeroEscena;
+}
+
 /**
  * @brief Clase Eje
  */
@@ -206,6 +220,7 @@ Ejes ejesCoordenadas;
 /**
  * @brief Clase Cubo
  */
+
 class MiCubo : Objeto3D
 {
 public:
@@ -267,11 +282,10 @@ public:
   }
 };
 
-MiCubo cubo1(1.0f);
-
 /**
  * @brief Clase Piramide
  */
+
 class MiPiramide : Objeto3D
 {
 public:
@@ -363,8 +377,97 @@ public:
   }
 };
 
+MiCubo cubo1(1.0f);
 // Ejemplo de uso
 MiPiramide piramide1(1.0f, 2.0f);
+
+MiMalla mallaCoche("./recursos/big_dodge.ply");
+MiMalla mallaCubo("./recursos/cubo.ply");
+
+/**
+ * @brief Clase Escena
+ */
+class Escena
+{
+public:
+  // constructor, dibujar ejes
+
+  Escena()
+  {
+    static GLfloat pos[4] = {5.0, 5.0, 10.0, 0.0}; // Posicion de la fuente de luz
+
+    float color[4] = {0.8, 0.0, 1, 1};
+
+    // glPushMatrix(); // Apila la transformacion geometrica actual
+
+    glClearColor(0.0, 0.0, 0.0, 1.0); // Fija el color de fondo a negro
+    // glClearColor(1.0, 1.0, 1.0, 1.0); // Fija el color de fondo a blanco
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Inicializa el buffer de color y el Z-Buffer
+
+    // Manejamos la luz
+    if (modo == GL_FILL && getIluminacion())
+    {
+      glEnable(GL_LIGHTING);
+    }
+    else
+    {
+      glDisable(GL_LIGHTING);
+    }
+
+    transformacionVisualizacion(); // Carga transformacion de visualizacion
+    ejesCoordenadas.draw();        // Dibuja los ejes
+
+    glLightfv(GL_LIGHT0, GL_POSITION, pos);
+
+    // glPopMatrix();
+  }
+
+  void drawEscena1()
+  {
+    GLfloat color3[4] = {1.0f, 0.0f, 1.0f, 1.0f}; // Magenta
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color3);
+    cubo1.draw(); // dibujo el cubo
+
+    glTranslatef(1.2, 0, 0);
+
+    GLfloat color2[4] = {0.0f, 1.0f, 1.0f, 1.0f}; // Cyan
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color2);
+    piramide1.draw();
+  }
+
+  void drawEscena2()
+  {
+    glPushMatrix();
+    glScalef(0.5, 0.5, 0.5);
+    GLfloat color2[4] = {1.0f, 0.0f, 0.0f, 1.0f}; // Red
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color2);
+    if (sombreadoCoche)
+    {
+      mallaCoche.drawSmooth(); // Dibuja con sombreado suave
+    }
+    else
+    {
+      mallaCoche.drawFlat(); // Dibuja con sombreado plano
+    }
+    glPopMatrix();
+
+    // Dibujamos el cubo
+    glPushMatrix();
+    glTranslatef(5, 0, 0);
+    GLfloat color3[4] = {0.5f, 0.0f, 0.5f, 1.0f}; // Violet
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color3);
+    if (sombreadoCubo)
+    {
+      mallaCubo.drawSmooth(); // Dibuja con sombreado suave
+    }
+    else
+    {
+      mallaCubo.drawFlat(); // Dibuja con sombreado plano
+    }
+    glPopMatrix();
+  }
+};
 
 /**	void Dibuja( void )
 
@@ -372,82 +475,23 @@ Procedimiento de dibujo del modelo. Es llamado por glut cada vez que se debe red
 
 **/
 
-MiMalla mallaCoche("./recursos/big_dodge.ply");
-MiMalla mallaCubo("./recursos/cubo.ply");
-
 void Dibuja(void)
 {
-  static GLfloat pos[4] = {5.0, 5.0, 10.0, 0.0}; // Posicion de la fuente de luz
 
-  float color[4] = {0.8, 0.0, 1, 1};
-
-  glPushMatrix(); // Apila la transformacion geometrica actual
-
-  glClearColor(0.0, 0.0, 0.0, 1.0); // Fija el color de fondo a negro
-  // glClearColor(1.0, 1.0, 1.0, 1.0); // Fija el color de fondo a blanco
-
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Inicializa el buffer de color y el Z-Buffer
-
-  // Manejamos la luz
-  if (modo == GL_FILL && getIluminacion())
-  {
-    glEnable(GL_LIGHTING);
-  }
-  else
-  {
-    glDisable(GL_LIGHTING);
-  }
-
-  transformacionVisualizacion(); // Carga transformacion de visualizacion
-  ejesCoordenadas.draw();        // Dibuja los ejes
-
-  glLightfv(GL_LIGHT0, GL_POSITION, pos); // Declaracion de luz. Colocada aqui esta fija en la escena
-
-  /*
-    // Practica 1: Dibujamos Triangulo y
-
-    GLfloat color3[4] = {1.0f, 0.0f, 1.0f, 1.0f}; // Magenta
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color3);
-    cubo1.draw(); // dibujo el cubo
-    //cubo1.draw(); // dibujo el cubo
-
-    glTranslatef(1.2, 0, 0);
-
-    GLfloat color2[4] = {0.0f, 1.0f, 1.0f, 1.0f}; // Cyan
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color2);
-    piramide1.draw();
-
-  */
-
-  // Dibujamos el coche 
   glPushMatrix();
-  glScalef(0.5, 0.5, 0.5);
-  GLfloat color2[4] = {1.0f, 0.0f, 0.0f, 1.0f}; // Red
-  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color2);
-  if (sombreadoCoche)
-  {
-    mallaCoche.drawSmooth(); // Dibuja con sombreado suave
-  }
-  else
-  {
-    mallaCoche.drawFlat(); // Dibuja con sombreado plano
-  }
-  glPopMatrix();
 
-  // Dibujamos el cubo
-  glPushMatrix();
-  glTranslatef(5, 0, 0);
-  GLfloat color3[4] = {0.5f, 0.0f, 0.5f, 1.0f}; // Violet
-  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color3);
-  if (sombreadoCubo)
+  Escena escena;
+
+  switch (numeroEscena)
   {
-    mallaCubo.drawSmooth(); // Dibuja con sombreado suave
+  case 1:
+    escena.drawEscena1();
+    break;
+
+  case 2:
+    escena.drawEscena2();
+    break;
   }
-  else
-  {
-    mallaCubo.drawFlat(); // Dibuja con sombreado plano
-  }
-  glPopMatrix();
 
   glPopMatrix();
   glutSwapBuffers(); // Intercambia el buffer de dibujo y visualizacion

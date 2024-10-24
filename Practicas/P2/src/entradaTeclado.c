@@ -32,7 +32,6 @@ modulo entradaTeclado.c
 #include <math.h>
 #include <GL/glut.h> // Libreria de utilidades de OpenGL
 #include "practicasIG.h"
-
 /**
 
 Imprime en la consola las instrucciones del programa
@@ -78,20 +77,35 @@ y:
 float rotxCamara = 30, rotyCamara = 45;
 float dCamara = 10;
 
+
 void letra(unsigned char k, int x, int y)
 {
 
   switch (k)
   {
 
+  case '1':
+    // dibujar escena 1
+    //Escena escena;
+    setEscena(1);
+    printf("Escena 1\n");
+    // hazlo como ilumincacion
+    break;
+
+  case '2':
+    // dibujar escena 2
+    //Escena escena;
+    setEscena(2);
+    printf("Escena 2\n");
+    break;
   case 'n':
-  case 'N': // punto
+  case 'N': // coche
     setSombreadoCoche(!getSombreadoCoche());
     printf("Sombreado Coche: %d\n", getSombreadoCoche());
     break; 
 
   case 'm':
-  case 'M': // punto
+  case 'M': // cubo
     setSombreadoCubo(!getSombreadoCubo());
     printf("Sombreado Cubo: %d\n", getSombreadoCubo());
     break;   

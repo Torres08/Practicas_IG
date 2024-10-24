@@ -59,6 +59,10 @@ void setSombreadoCubo(int estado);
 
 int getSombreadoCubo();
 
+void setEscena(int e);
+
+int getEscena();
+
 /**
  * @brief Clase objeto 3D
  */
