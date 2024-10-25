@@ -63,6 +63,7 @@ void set_roty(float r){
   roty = r;
 }
 
+
 int main (int argc, char *argv[])
 {
 // Inicializa glu y openGL
@@ -92,6 +93,7 @@ int main (int argc, char *argv[])
 
 // roty
 glutIdleFunc(idle);
+
 
 // Funcion de fondo
   glutTimerFunc (30, idle, 0);

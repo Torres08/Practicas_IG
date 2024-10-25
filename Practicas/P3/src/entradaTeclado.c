@@ -245,6 +245,14 @@ void letra(unsigned char k, int x, int y)
   }
   break;
 
+  case 'S':
+  case 's': // coche
+    printf("Animacion\n");
+    setAnimacion(!getAnimacion());
+    printf("Modo Animacion: %d\n", getAnimacion());
+    //global_animacion();
+    break;
+
   case 'n':
   case 'N': // coche
     setSombreadoCoche(!getSombreadoCoche());

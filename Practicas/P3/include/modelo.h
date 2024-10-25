@@ -90,6 +90,11 @@ float global_getAnguloH();
 void global_setAnguloI(float angulo);
 float global_getAnguloI();
 
+void global_animacion();
+
+void setAnimacion(int a);
+int getAnimacion();	
+
 /**
  * @brief Clase objeto 3D
  */

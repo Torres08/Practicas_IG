@@ -1,11 +1,14 @@
-# Practica 2
+# Practica 3
 
-- Cambio escena con 1 y 2
+- Brazo mecanico de 9 articulaciones
+- hacer un `make total`
+- Entrar en la Escena 3 presionando 3
+- Usar las letras q,w,e,r,t,y,u,a para mover el brazo mecanico. En mayuscula en sentido horario y en minuscula antihorario.
+- Para la animacion pular la letra s
 
-- Cambio sombreado con n y m para la escena 2 
-
--  hacer un make total para tanto borrar como ejecutar la practica, tambien tienes un make clean y un make ejecutar para hacerlo diferente
-
-
+## Animacion
+![Animacion del Brazo Mecanico](Entrega/BrazoMecanico.gif)
+## Grafo de Escena
+![Brazo Mecanico](Entrega/GrafoEscena.png)
 
 

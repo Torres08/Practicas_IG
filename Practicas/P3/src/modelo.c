@@ -394,9 +394,6 @@ MiMalla mallaI("./recursos/Brazo/I.ply");
 MiMalla mallaE("./recursos/Brazo/C.ply");
 MiMalla mallaF("./recursos/Brazo/D.ply");
 
-
-
-
 // clase brazo mecanico
 class BrazoMecanico : public Objeto3D
 {
@@ -420,108 +417,140 @@ public:
   }
 
   // get & set de los angulos
-  public:
+public:
+  // q
+  float getAnguloA() { return anguloA; } // no tiene restricciones
+  void setAnguloA(float angulo) { anguloA = angulo; }
 
-    // q
-    float getAnguloA() { return anguloA; } // no tiene restricciones 
-    void setAnguloA(float angulo) { anguloA = angulo; }
-
-    // w
-    float getAnguloB() { return anguloB; }
-    void setAnguloB(float angulo) {
-      if (angulo > 70.0f) {
+  // w
+  float getAnguloB() { return anguloB; }
+  void setAnguloB(float angulo)
+  {
+    if (angulo > 70.0f)
+    {
       anguloB = 70.0f;
       printf("El valor de anguloB no puede ser mayor que 70. Se ha ajustado a 70.\n");
-      } else if (angulo < -70.0f) {
+    }
+    else if (angulo < -70.0f)
+    {
       anguloB = -70.0f;
       printf("El valor de anguloB no puede ser menor que -70. Se ha ajustado a -70.\n");
-      } else {
+    }
+    else
+    {
       anguloB = angulo;
-      }
     }
+  }
 
-    // libre, no tiene restricciones
-    // e
-    float getAnguloC() { return anguloC; }
-    void setAnguloC(float angulo) { anguloC = angulo; }
+  // libre, no tiene restricciones
+  // e
+  float getAnguloC() { return anguloC; }
+  void setAnguloC(float angulo) { anguloC = angulo; }
 
-    // r
-    float getAnguloD() { return anguloD; }
-    void setAnguloD(float angulo) {
-      if (angulo > 70.0f) {
-        anguloD = 70.0f;
-        printf("El valor de anguloD no puede ser mayor que 70. Se ha ajustado a 70.\n");
-      } else if (angulo < -70.0f) {
-        anguloD = -70.0f;
-        printf("El valor de anguloD no puede ser menor que -70. Se ha ajustado a -70.\n");
-      } else {
-        anguloD = angulo;
-      }
+  // r
+  float getAnguloD() { return anguloD; }
+  void setAnguloD(float angulo)
+  {
+    if (angulo > 70.0f)
+    {
+      anguloD = 70.0f;
+      printf("El valor de anguloD no puede ser mayor que 70. Se ha ajustado a 70.\n");
     }
-
-    // t
-    float getAnguloE() { return anguloE; }
-    void setAnguloE(float angulo) { anguloE = angulo; }
-
-    // y
-    float getAnguloF() { return anguloF; }
-    void setAnguloF(float angulo) {
-      if (angulo > 120.0f) {
-        anguloF = 120.0f;
-        printf("El valor de anguloF no puede ser mayor que 120. Se ha ajustado a 120.\n");
-      } else if (angulo < -120.0f) {
-        anguloF = -120.0f;
-        printf("El valor de anguloD no puede ser menor que -120. Se ha ajustado a -120.\n");
-      } else {
-        anguloF = angulo;
-      }
+    else if (angulo < -70.0f)
+    {
+      anguloD = -70.0f;
+      printf("El valor de anguloD no puede ser menor que -70. Se ha ajustado a -70.\n");
     }
-
-
-    // u
-    //-5,40
-    float getAnguloG() { return anguloG; }
-    void setAnguloG(float angulo) {
-      if (angulo < -50.0f) {
-        anguloG = -50.0f;
-        printf("El valor de anguloG no puede ser mayor que 40. Se ha ajustado a 40.\n");
-      } else if (angulo > 10.0f) {
-        anguloG = 10.0f;
-        printf("El valor de anguloG no puede ser menor que -5. Se ha ajustado a -5.\n");
-      } else {
-        anguloG = angulo;
-      }
+    else
+    {
+      anguloD = angulo;
     }
+  }
 
-    float getAnguloH() { return anguloH; }
-    void setAnguloH(float angulo) {
-      if (angulo > 50.0f) {
-        anguloH = 50.0f;
-        printf("El valor de anguloG no puede ser mayor que 40. Se ha ajustado a 40.\n");
-      } else if (angulo < -10.0f) {
-        anguloH = -10.0f;
-        printf("El valor de anguloG no puede ser menor que -5. Se ha ajustado a -5.\n");
-      } else {
-        anguloH= angulo;
-      }
+  // t
+  float getAnguloE() { return anguloE; }
+  void setAnguloE(float angulo) { anguloE = angulo; }
+
+  // y
+  float getAnguloF() { return anguloF; }
+  void setAnguloF(float angulo)
+  {
+    if (angulo > 120.0f)
+    {
+      anguloF = 120.0f;
+      printf("El valor de anguloF no puede ser mayor que 120. Se ha ajustado a 120.\n");
     }
-
-
-    //a
-    // 30 0
-    float getAnguloI() { return anguloI; }
-    void setAnguloI(float angulo) {
-      if (angulo > 0.30f) {
-        anguloI = 0.30f;
-        printf("El valor de anguloI no puede ser mayor que 30. Se ha ajustado a 30.\n");
-      } else if (angulo < 0.0f) {
-        anguloI = 0.0f;
-        printf("El valor de anguloI no puede ser menor que 0. Se ha ajustado a 0.\n");
-      } else {
-        anguloI = angulo;
-      }
+    else if (angulo < -120.0f)
+    {
+      anguloF = -120.0f;
+      printf("El valor de anguloD no puede ser menor que -120. Se ha ajustado a -120.\n");
     }
+    else
+    {
+      anguloF = angulo;
+    }
+  }
 
+  // u
+  //-5,40
+  float getAnguloG() { return anguloG; }
+  void setAnguloG(float angulo)
+  {
+    if (angulo < -50.0f)
+    {
+      anguloG = -50.0f;
+      printf("El valor de anguloG no puede ser mayor que 40. Se ha ajustado a 40.\n");
+    }
+    else if (angulo > 10.0f)
+    {
+      anguloG = 10.0f;
+      printf("El valor de anguloG no puede ser menor que -5. Se ha ajustado a -5.\n");
+    }
+    else
+    {
+      anguloG = angulo;
+    }
+  }
+
+  float getAnguloH() { return anguloH; }
+  void setAnguloH(float angulo)
+  {
+    if (angulo > 50.0f)
+    {
+      anguloH = 50.0f;
+      printf("El valor de anguloG no puede ser mayor que 40. Se ha ajustado a 40.\n");
+    }
+    else if (angulo < -10.0f)
+    {
+      anguloH = -10.0f;
+      printf("El valor de anguloG no puede ser menor que -5. Se ha ajustado a -5.\n");
+    }
+    else
+    {
+      anguloH = angulo;
+    }
+  }
+
+  // a
+  //  30 0
+  float getAnguloI() { return anguloI; }
+  void setAnguloI(float angulo)
+  {
+    if (angulo > 0.30f)
+    {
+      anguloI = 0.30f;
+      printf("El valor de anguloI no puede ser mayor que 30. Se ha ajustado a 30.\n");
+    }
+    else if (angulo < 0.0f)
+    {
+      anguloI = 0.0f;
+      printf("El valor de anguloI no puede ser menor que 0. Se ha ajustado a 0.\n");
+    }
+    else
+    {
+      anguloI = angulo;
+    }
+  }
 
 
   void A()
@@ -539,8 +568,8 @@ public:
   void B()
   {
     glPushMatrix();
-    //glRotatef(get_roty(), 0, 0, 1); // angulo A
-     glRotatef(anguloA, 0, 0, 1);
+    // glRotatef(get_roty(), 0, 0, 1); // angulo A
+    glRotatef(anguloA, 0, 0, 1);
 
     glTranslatef(0, 0.55, -0.5);
     mallaB.draw();
@@ -632,10 +661,13 @@ public:
     glTranslatef(0, 0.54, -0.85);
     mallaF.draw();
 
+    glPushMatrix();
+
     glTranslatef(0.15, -0.5, 1.5);
     glRotatef(9, 0, 0, 1);
     glRotatef(-90, 0, 1, 0);
     G();
+    glPopMatrix();
 
     glPopMatrix();
   }
@@ -668,8 +700,8 @@ public:
   {
     glPushMatrix();
 
-    //glRotatef(get_roty(), 0, 0, 1);
-    glTranslatef(0,0,anguloI); //me gustaria moverlo sobr el eje Z, angulo I
+    // glRotatef(get_roty(), 0, 0, 1);
+    glTranslatef(0, 0, anguloI); // me gustaria moverlo sobr el eje Z, angulo I
 
     glPushMatrix();
     glTranslatef(-0.05, -0.01, 0.7);
@@ -680,8 +712,6 @@ public:
     glTranslatef(0.05, 0.01, 0.7);
     K();
     glPopMatrix();
-
-
 
     glScaled(0.8, 0.8, 0.8);
     glRotatef(-180, 1, 0, 0);
@@ -731,6 +761,22 @@ public:
     glPopMatrix();
   }
 
+  void animacion()
+  {
+    static float angulo = 0.0f;
+    angulo += 1.0f;
+
+    setAnguloA(sin(angulo * M_PI / 180.0f) * 35.0f);
+    setAnguloB(sin(angulo * M_PI / 180.0f) * 70.0f);
+    setAnguloC(sin(angulo * M_PI / 180.0f) * 90.0f);
+    setAnguloD(sin(angulo * M_PI / 180.0f) * 70.0f);
+    setAnguloE(sin(angulo * M_PI / 180.0f) * 45.0f);
+    setAnguloF(sin(angulo * M_PI / 180.0f) * 120.0f);
+    setAnguloG(sin(angulo * M_PI / 180.0f) * 50.0f);
+    setAnguloH(sin(angulo * M_PI / 180.0f) * 50.0f);
+    setAnguloI(sin(angulo * M_PI / 180.0f) * 0.30f);
+  }
+
   // E F
 
   void draw()
@@ -742,7 +788,7 @@ public:
 
     // set_roty(0);
 
-    glRotated(-90, 1, 0, 0); // ponerlo bien
+    glRotated(-90, 1, 0, 0);
     glScaled(2, 2, 2);
 
     glPushMatrix();
@@ -752,33 +798,63 @@ public:
 
     B();
 
-    // I();
-    //  B
+    //animacion(); // aqui va bien
+
+
+    // A();
+    // B();
+    // C();
+    // D();
+    // E();
+    // F();
+    // G();
+    //  I();
+    // J();
+
+    // Pieza B
+
     /*
-    glRotatef(get_roty(), 0, 0, 1);
+    glRotatef(anguloA, 0, 0, 1);
+
     glTranslatef(0, 0.55, -0.5);
     mallaB.draw();
     */
 
-    // C
+    // Pieza C
     /*
-    glRotatef(get_roty(), 1, 0, 0);
-    glTranslatef(0.22,0.54,-0.75);
-    glRotatef(-11,0,0,1);
-    mallaC.draw();
-    */
+    glRotatef(anguloB, 1, 0, 0);
+     glTranslatef(0.22, 0.54, -0.75);
+     glRotatef(-11, 0, 0, 1);
+     mallaC.draw();
+     */
 
-    // D
+    // Pieza D
     /*
-    glRotatef(get_roty(), 0, 0, 1);
-    glTranslatef(0,0.54,-0.85);
+    glRotatef(anguloC, 0, 0, 1); // Angulo C
+    glRotatef(3, 0, 0, 1);
+    glTranslatef(0, 0.54, -0.85);
     mallaD.draw();
     */
 
-    //    glRotatef(-25, 0, 0, 1);
-
+    // Pieza E
     /*
-    glRotatef(get_roty(), 0, 0, 1);
+    glRotatef(anguloD, 1, 0, 0); // Angulo D
+    glTranslatef(0.22, 0.54, -0.75);
+    glRotatef(-11, 0, 0, 1);
+    mallaE.draw();
+    */
+
+    // Pieza F
+    /*
+    glRotatef(anguloE, 0, 0, 1); // Angulo E
+     glRotatef(3, 0, 0, 1);
+     glTranslatef(0, 0.54, -0.85);
+     mallaF.draw();
+     */
+
+    // Pieza G
+    /*
+    glRotatef(anguloF, 0, 0, 1); // Angulo F
     glTranslatef(-0.05, 0, 0);
     glRotatef(-23, 0, 0, 1);
     glRotatef(15, 1, 0, 0);
@@ -786,14 +862,11 @@ public:
     glTranslated(0, 1.27, -1.65);
     mallaG.draw();
     */
-    // G();
-    // F();
 
-    // glTranslatef(0,0,get_roty());
-
-    // G();
-    //  G();
+    // Pieza H
     /*
+    glTranslatef(0,0,anguloI); //me gustaria moverlo sobr el eje Z, angulo I
+    glScaled(0.8, 0.8, 0.8);
     glRotatef(-180, 1, 0, 0);
     glRotatef(90, 0, 0, 1);
     glTranslatef(-0.128, -0.055, -0.72);
@@ -803,16 +876,33 @@ public:
     mallaH.draw(); // traslada sobre un eje, no rota
     */
 
-    /*
-    glRotatef(get_roty(),0,1,0);
+    // Pieza I
+    // J();
 
-    glTranslatef(-0.05,0,-0.05);
-    glRotatef(40,0,0,1);
-    glRotatef(-80,1,0,0);
-    glTranslatef(-0.65,0.9,-1.15);
-    mallaI.draw();
-    */
-    // I();
+    // Pieza J
+    // K();
+
+    glPopMatrix();
+  }
+
+  void draw_animacion(){
+    // base
+    float blanco[4] = {1, 1, 1, 1};
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, blanco);
+
+    // set_roty(0);
+
+    glRotated(-90, 1, 0, 0);
+    glScaled(2, 2, 2);
+
+    glPushMatrix();
+
+    A();
+    glTranslatef(0.36, -0.35, 0.5); // mirandolo sin rotated -90
+
+    B();
+
+    animacion();
 
     glPopMatrix();
   }
@@ -910,6 +1000,25 @@ float global_getAnguloI()
   return brazoMecanico.getAnguloI();
 }
 
+void global_animacion()
+{
+  brazoMecanico.animacion();
+}
+
+int animacion = 0;
+
+void setAnimacion(int a)
+{
+  animacion = a;
+}
+
+int getAnimacion()
+{
+  return animacion;
+}
+
+// set roty & get roty
+
 /**
  * @brief Clase Escena
  */
@@ -1001,7 +1110,15 @@ public:
     // glScalef(0.5, 0.5, 0.5);
     GLfloat color3[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // White
 
-    brazoMecanico.draw();
+    if (animacion){
+      brazoMecanico.draw_animacion();
+
+    } else {
+      brazoMecanico.draw();
+    }
+    //brazoMecanico.draw();
+
+    //brazoMecanico.draw_animacion();
 
     /*
     mallaA.draw();
