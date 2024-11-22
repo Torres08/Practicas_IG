@@ -101,6 +101,15 @@ void global_animacion();
 void setAnimacion(int a);
 int getAnimacion();	
 
+
+int getModo();
+
+void setTipoTextura(int tipo);
+int getTipoTextura();
+
+void setCambioModelo(int cambio);
+int getCambioModelo();
+
 /**
  * @brief Clase objeto 3D
  */
@@ -109,6 +118,7 @@ class Objeto3D
 public:
 	virtual void draw() = 0; // Dibuja el objeto
 	void asignarTextura(const char *nombre_arch);
+	GLuint getTextId() { return texId; } // Nuevo método para obtener texId
 protected:
 	GLuint texId;
 };

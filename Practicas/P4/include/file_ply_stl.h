@@ -26,6 +26,8 @@
 #define _PLY_H
 
 #include <vector>
+#include <MiMalla.h>
+
 
 namespace ply
 {
@@ -47,10 +49,12 @@ namespace ply
 // **
 // *********************************************************************
 
+  
   void read (const char *nombre_archivo_pse,	// entrada: nombre de archivo 
 	     std::vector < float >&vertices,	// salida:  vector de coords. de vert.
 	     std::vector < int >&caras	// salida:  vector de triángulos (índices)
     );
+    
 
 // **********************************************************************
 // **
@@ -69,9 +73,12 @@ namespace ply
 // **
 // *********************************************************************
 
+  
   void read_vertices (const char *nombre_archivo_pse,	// entrada: nombre de archivo 
 		      std::vector < float >&vertices	// salida:  vector de coords. de vert.
     );
+  
+   //void read_vertices(const char *nombre_archivo_pse, std::vector<Vertice> &vertices);
 
 };				// fin namespace ply
 

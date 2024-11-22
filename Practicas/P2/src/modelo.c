@@ -442,6 +442,7 @@ public:
     glScalef(0.5, 0.5, 0.5);
     GLfloat color2[4] = {1.0f, 0.0f, 0.0f, 1.0f}; // Red
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color2);
+    
     if (sombreadoCoche)
     {
       mallaCoche.drawSmooth(); // Dibuja con sombreado suave

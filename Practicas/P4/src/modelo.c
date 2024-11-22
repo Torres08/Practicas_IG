@@ -38,16 +38,44 @@ modulo modelo.c
 #include <vector>
 #include "modelo.h"
 #include "MiMalla.h"
+#include "MiDado.h"
+#include "Ejes.h"
+#include "MiCubo.h"
+#include "MiPiramide.h"
+#include "MiBrazoMecanico.h"
 #include "lector-jpg.h"
 
-/**	void initModel()
+using namespace std;
 
-Inicializa el modelo y de las variables globales
+Ejes ejesCoordenadas;
 
-**/
+MiCubo cubo1(1.0f);
+MiPiramide piramide1(1.0f, 2.0f);
+MiMalla mallaCoche("./recursos/big_dodge.ply");
+MiMalla mallaVaca("./recursos/cow.ply");
+MiMalla mallaBeethoven("./recursos/beethoven.ply");
+MiMalla mallaTeapot("./recursos/teapot.ply");
+MiMalla mallaCubo("./recursos/cubo.ply");
+MiMalla mallaLobo("./recursos/lobo.ply");
+MiMalla mallaTaza("./recursos/mug.ply");
 
-/*
+MiBrazoMecanico brazoMecanico;
 MiDado dado;
+
+void aplicarMaterial(const MiMalla &malla)
+{
+  float diffuse[3], specular[3], ambient[3];
+  std::tie(diffuse[0], diffuse[1], diffuse[2]) = malla.getDiffuseReflectivity();
+  std::tie(specular[0], specular[1], specular[2]) = malla.getSpecularReflectivity();
+  std::tie(ambient[0], ambient[1], ambient[2]) = malla.getAmbientReflectivity();
+  float shininess = malla.getShininess();
+
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+  glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+  glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+}
+
 void initModel()
 {
   glEnable(GL_DEPTH_TEST); // Habilitar el depth test
@@ -55,10 +83,105 @@ void initModel()
   glCullFace(GL_BACK);
 
   dado.asignarTextura("recursos/dado.jpg");
+  //mallaLobo.asignarTextura("recursos/marmol.jpg");
+
+  if (getTipoTextura)
+  {
+    mallaTaza.asignarTextura("recursos/madera.jpg");
+    mallaLobo.asignarTextura("recursos/marmol.jpg");
+  }
+  else
+  {
+    mallaTaza.asignarTextura("recursos/marmol.jpg");
+    mallaLobo.asignarTextura("recursos/madera.jpg");
+  }
 
 
+  // Configurar material para mallaVaca (Oro)
+  mallaVaca.setDiffuseReflectivity(0.83f, 0.69f, 0.22f);  
+  mallaVaca.setSpecularReflectivity(0.99f, 0.94f, 0.81f); 
+  mallaVaca.setAmbientReflectivity(0.25f, 0.20f, 0.07f);  
+  mallaVaca.setShininess(50.0f);                          
+
+  // Configurar material para mallaBeethoven (Vidrio)
+  mallaBeethoven.setDiffuseReflectivity(0.0f, 0.5f, 0.0f);  
+  mallaBeethoven.setSpecularReflectivity(0.9f, 0.9f, 0.9f); 
+  mallaBeethoven.setAmbientReflectivity(0.1f, 0.1f, 0.1f);  
+  mallaBeethoven.setShininess(100.0f);                      
+
+  // Configurar material para mallaTeapot (Plástico)
+  mallaTeapot.setDiffuseReflectivity(0.0f, 0.0f, 1.0f);  
+  mallaTeapot.setSpecularReflectivity(0.3f, 0.3f, 0.3f); 
+  mallaTeapot.setAmbientReflectivity(0.1f, 0.1f, 0.1f);  
+  mallaTeapot.setShininess(1.0f);                        
+                                                         
+  mallaCoche.setDiffuseReflectivity(1.0f, 0.0f, 0.0f);   
+  mallaCoche.setSpecularReflectivity(0, 0, 0);           
+  mallaCoche.setAmbientReflectivity(0, 0, 0);            
+  mallaCoche.setShininess(0);
+
+  // Configurar material para mallaLobo (Madera)
+  mallaLobo.setDiffuseReflectivity(1.0f, 1.0f, 1.0f);  
+  mallaLobo.setSpecularReflectivity(1.0f, 1.0f, 1.0f); 
+  mallaLobo.setAmbientReflectivity(1.0f, 1.0f, 1.0f);  
+  mallaLobo.setShininess(100.0f);                      
 }
-*/
+
+/**
+ * @brief Asignar Textura a partir de una ruta de archivo.
+ * 
+ */
+void Objeto3D::asignarTextura(const char *nombre_arch)
+{
+  unsigned ancho, alto;
+  unsigned char *data = LeerArchivoJPEG(nombre_arch, ancho, alto);
+  if (!data)
+  {
+    std::cerr << "Error al leer la imagen JPEG: " << nombre_arch << std::endl;
+    return;
+  }
+
+  glGenTextures(1, &texId);
+  glBindTexture(GL_TEXTURE_2D, texId);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  // glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, ancho, alto, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+  glEnable(GL_NORMALIZE);
+
+  delete[] data;
+}
+
+// 0: madera, 1: marmol
+int tipoTextura = 0;
+
+void setTipoTextura(int tipo)
+{
+  tipoTextura = tipo;
+}
+
+int getTipoTextura()
+{
+  return tipoTextura;
+}
+
+int cambioModelo = 0;
+
+void setCambioModelo(int cambio)
+{
+  cambioModelo = cambio;
+}
+
+int getCambioModelo()
+{
+  return cambioModelo;
+}
 
 int modo = GL_FILL;
 int iluminacion = 1;
@@ -70,6 +193,11 @@ void setModo(int M)
 {
   modo = M;
   glPolygonMode(GL_FRONT_AND_BACK, modo);
+}
+
+int getModo()
+{
+  return modo;
 }
 
 /**
@@ -204,867 +332,6 @@ int getEscena()
 {
   return numeroEscena;
 }
-
-void Objeto3D::asignarTextura(const char *nombre_arch)
-{
-  unsigned ancho, alto;
-  unsigned char *data = LeerArchivoJPEG(nombre_arch, ancho, alto);
-  if (!data)
-  {
-    std::cerr << "Error al leer la imagen JPEG: " << nombre_arch << std::endl;
-    return;
-  }
-
-  glGenTextures(1, &texId);
-  glBindTexture(GL_TEXTURE_2D, texId);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, ancho, alto, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-
-  delete[] data;
-}
-
-/**
- * @brief Clase Eje
- */
-class Ejes : Objeto3D
-{
-public:
-  float longitud = 30;
-  // Dibuja el objeto
-  void draw()
-  {
-    glDisable(GL_LIGHTING);
-    glBegin(GL_LINES);
-    {
-      glColor3f(0, 1, 0);
-      glVertex3f(0, 0, 0);
-      glVertex3f(0, longitud, 0);
-
-      glColor3f(1, 0, 0);
-      glVertex3f(0, 0, 0);
-      glVertex3f(longitud, 0, 0);
-
-      glColor3f(0, 0, 1);
-      glVertex3f(0, 0, 0);
-      glVertex3f(0, 0, longitud);
-    }
-    glEnd();
-
-    // glEnable(GL_LIGHTING);
-    //  condicion aqui
-
-    if (modo == GL_FILL && getIluminacion())
-    {
-      glEnable(GL_LIGHTING);
-    }
-  }
-};
-
-Ejes ejesCoordenadas;
-
-/**
- * @brief Clase Cubo
- */
-
-class MiCubo : Objeto3D
-{
-public:
-  float lado;
-
-  MiCubo(float l)
-  {
-    lado = l;
-  }
-
-  // asignar vectores texturas
-
-  void draw()
-  {
-
-    glBegin(GL_QUADS);
-    {
-      // Cara delante
-      glNormal3f(0, 0, 1);
-      glVertex3f(0, 0, lado);
-      glVertex3f(lado, 0, lado);
-      glVertex3f(lado, lado, lado);
-      glVertex3f(0, lado, lado);
-
-      // Cara atrás
-      glNormal3f(0, 0, -1);
-      glVertex3f(0, 0, 0);
-      glVertex3f(0, lado, 0);
-      glVertex3f(lado, lado, 0);
-      glVertex3f(lado, 0, 0);
-
-      // Cara izquierda
-      glNormal3f(-1, 0, 0);
-      glVertex3f(0, 0, 0);
-      glVertex3f(0, 0, lado);
-      glVertex3f(0, lado, lado);
-      glVertex3f(0, lado, 0);
-
-      // Cara derecha
-      glNormal3f(-1, 0, 0);
-      glVertex3f(lado, 0, 0);
-      glVertex3f(lado, lado, 0);
-      glVertex3f(lado, lado, lado);
-      glVertex3f(lado, 0, lado);
-
-      // Cara arriba
-      glNormal3f(0, 1, 0);
-      glVertex3f(0, lado, 0);
-      glVertex3f(0, lado, lado);
-      glVertex3f(lado, lado, lado);
-      glVertex3f(lado, lado, 0);
-
-      // Cara abajo
-      glNormal3f(0, -1, 0);
-      glVertex3f(0, 0, 0);
-      glVertex3f(lado, 0, 0);
-      glVertex3f(lado, 0, lado);
-      glVertex3f(0, 0, lado);
-    }
-    glEnd();
-  }
-};
-
-/**
- * @brief Clase Piramide
- */
-
-class MiPiramide : Objeto3D
-{
-public:
-  float lado;
-  float alto;
-
-  MiPiramide(float l, float h)
-  {
-    lado = l;
-    alto = h;
-  }
-
-  void calcularNormal(float Ax, float Ay, float Az, float Bx, float By, float Bz, float Cx, float Cy, float Cz)
-  {
-    // Calcular los dos vectores
-    // v1 -v0
-    // v2 - v0
-    float ux = Bx - Ax;
-    float uy = By - Ay;
-    float uz = Bz - Az;
-
-    float vx = Cx - Ax;
-    float vy = Cy - Ay;
-    float vz = Cz - Az;
-
-    // Calcular el producto vectorial para la normal
-    float nx = uy * vz - uz * vy;
-    float ny = uz * vx - ux * vz;
-    float nz = ux * vy - uy * vx;
-
-    // Normalizar la normal (opcional) hacer raiz cuadrada, si es distinto de 0 dividirlo
-    float length = sqrt(nx * nx + ny * ny + nz * nz);
-    if (length != 0)
-    {
-      nx /= length;
-      ny /= length;
-      nz /= length;
-    }
-
-    // Usar la normal calculada
-    glNormal3f(nx, ny, nz);
-  }
-
-  // asignar texturas
-
-  void draw()
-  {
-    float Cx = lado / 2.0f;
-    float Cy = alto;
-    float Cz = lado / 2.0f;
-
-    glBegin(GL_TRIANGLES);
-    {
-
-      // Cara delante
-      calcularNormal(0, 0, lado, lado, 0, lado, Cx, Cy, Cz);
-      glVertex3f(0, 0, lado);
-      glVertex3f(lado, 0, lado);
-      glVertex3f(lado / 2, alto, lado / 2); // arriba
-
-      // Cara atras
-      calcularNormal(lado, 0, 0, 0, 0, 0, Cx, Cy, Cz);
-      glVertex3f(lado, 0, 0);
-      glVertex3f(0, 0, 0);
-      glVertex3f(lado / 2, alto, lado / 2);
-
-      // Cara derecha
-      calcularNormal(lado, 0, lado, lado, 0, 0, Cx, Cy, Cz);
-      glVertex3f(lado, 0, lado);
-      glVertex3f(lado, 0, 0);
-      glVertex3f(lado / 2, alto, lado / 2);
-
-      // Cara izquierda
-      calcularNormal(0, 0, 0, 0, 0, lado, Cx, Cy, Cz);
-      glVertex3f(0, 0, 0);
-      glVertex3f(0, 0, lado);
-      glVertex3f(lado / 2, alto, lado / 2);
-    }
-    glEnd();
-
-    // Base de la pirámide
-    glBegin(GL_QUADS);
-    {
-      glNormal3f(0, -1, 0);
-      glVertex3f(0, 0, 0);
-      glVertex3f(lado, 0, 0);
-      glVertex3f(lado, 0, lado);
-      glVertex3f(0, 0, lado);
-    }
-    glEnd();
-  }
-};
-
-class MiDado : public Objeto3D
-{
-public:
-  float lado;
-
-  MiDado()
-  {
-    lado = 1.0f;
-  }
-
-  void draw()
-  {
-    // habilitar el mapeo de texturas
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, texId);
-
-    glBegin(GL_QUADS);
-    {
-      // Cara delante
-      glNormal3f(0, 0, 1);
-      glTexCoord2f(0.5, 0.5);
-      glVertex3f(0, 0, lado);
-      glTexCoord2f(0.75, 0.5);
-      glVertex3f(lado, 0, lado);
-      glTexCoord2f(0.75, 0.75);
-      glVertex3f(lado, lado, lado);
-      glTexCoord2f(0.5, 0.75);
-      glVertex3f(0, lado, lado);
-
-      // Cara atrás
-      glNormal3f(0, 0, -1);
-      glTexCoord2f(0.25, 0.5);
-      glVertex3f(0, 0, 0);
-      glTexCoord2f(0, 0.5);
-      glVertex3f(0, lado, 0);
-      glTexCoord2f(0, 0.75);
-      glVertex3f(lado, lado, 0);
-      glTexCoord2f(0.25, 0.75);
-      glVertex3f(lado, 0, 0);
-
-      // Cara izquierda
-      glNormal3f(-1, 0, 0);
-      glTexCoord2f(0.25, 0.5);
-      glVertex3f(0, 0, 0);
-      glTexCoord2f(0.25, 0.75);
-      glVertex3f(0, 0, lado);
-      glTexCoord2f(0.5, 0.75);
-      glVertex3f(0, lado, lado);
-      glTexCoord2f(0.5, 0.5);
-      glVertex3f(0, lado, 0);
-
-      // Cara derecha
-      glNormal3f(1, 0, 0);
-      glTexCoord2f(0.75, 0.5);
-      glVertex3f(lado, 0, 0);
-      glTexCoord2f(0.75, 0.75);
-      glVertex3f(lado, lado, 0);
-      glTexCoord2f(1.0, 0.75);
-      glVertex3f(lado, lado, lado);
-      glTexCoord2f(1.0, 0.5);
-      glVertex3f(lado, 0, lado);
-
-      // Cara arriba
-      glNormal3f(0, 1, 0);
-      glTexCoord2f(0.5, 0.25);
-      glVertex3f(0, lado, 0);
-      glTexCoord2f(0.5, 0.5);
-      glVertex3f(0, lado, lado);
-      glTexCoord2f(0.75, 0.5);
-      glVertex3f(lado, lado, lado);
-      glTexCoord2f(0.75, 0.25);
-      glVertex3f(lado, lado, 0);
-
-      // Cara abajo
-      glNormal3f(0, -1, 0);
-      glTexCoord2f(0.75, 0.75);
-      glVertex3f(0, 0, 0);
-      glTexCoord2f(0.5, 0.75);
-      glVertex3f(lado, 0, 0);
-      glTexCoord2f(0.5, 1.0);
-      glVertex3f(lado, 0, lado);
-      glTexCoord2f(0.75, 1.0);
-      glVertex3f(0, 0, lado);
-    }
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-  }
-};
-
-MiDado dado;
-void initModel()
-{
-  glEnable(GL_DEPTH_TEST); // Habilitar el depth test
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
-
-  dado.asignarTextura("recursos/dado.jpg");
-}
-
-MiCubo cubo1(1.0f);
-
-// Ejemplo de uso
-MiPiramide piramide1(1.0f, 2.0f);
-
-// ejemplos de malla
-MiMalla mallaCoche("./recursos/big_dodge.ply");
-MiMalla mallaVaca("./recursos/cow.ply");
-MiMalla mallaBeethoven("./recursos/beethoven.ply");
-MiMalla mallaTeapot("./recursos/teapot.ply");
-MiMalla mallaCubo("./recursos/cubo.ply");
-
-// para el brazo mecanico
-MiMalla mallaA("./recursos/Brazo/A.ply");
-MiMalla mallaB("./recursos/Brazo/B.ply");
-MiMalla mallaC("./recursos/Brazo/C.ply");
-MiMalla mallaD("./recursos/Brazo/D.ply");
-MiMalla mallaG("./recursos/Brazo/G.ply");
-MiMalla mallaH("./recursos/Brazo/H.ply");
-MiMalla mallaI("./recursos/Brazo/I.ply");
-MiMalla mallaE("./recursos/Brazo/C.ply");
-MiMalla mallaF("./recursos/Brazo/D.ply");
-
-// clase brazo mecanico
-class BrazoMecanico : public Objeto3D
-{
-public:
-  float anguloA, anguloB, anguloC, anguloD, anguloE, anguloF, anguloG, anguloH, anguloI;
-
-  // ANGULO POR CADA ROTACION
-  BrazoMecanico()
-  {
-    anguloA = anguloB = anguloC = anguloD = anguloE = anguloF = anguloG = anguloH = anguloI = 0.0f;
-    anguloA = 35;  // pieza B
-    anguloB = 45;  // pieza C
-    anguloC = 90;  // pieza D
-    anguloD = 25;  // pieza E
-    anguloE = 45;  // pieza F
-    anguloF = 90;  // pieza G
-    anguloG = -30; // Pieza H
-    anguloH = 30;  // pieza I
-
-    anguloI = 0; // este para la traslacion del palo si vale
-  }
-
-  // get & set de los angulos
-public:
-  // q
-  float getAnguloA() { return anguloA; } // no tiene restricciones
-  void setAnguloA(float angulo) { anguloA = angulo; }
-
-  // w
-  float getAnguloB() { return anguloB; }
-  void setAnguloB(float angulo)
-  {
-    if (angulo > 70.0f)
-    {
-      anguloB = 70.0f;
-      printf("El valor de anguloB no puede ser mayor que 70. Se ha ajustado a 70.\n");
-    }
-    else if (angulo < -70.0f)
-    {
-      anguloB = -70.0f;
-      printf("El valor de anguloB no puede ser menor que -70. Se ha ajustado a -70.\n");
-    }
-    else
-    {
-      anguloB = angulo;
-    }
-  }
-
-  // libre, no tiene restricciones
-  // e
-  float getAnguloC() { return anguloC; }
-  void setAnguloC(float angulo) { anguloC = angulo; }
-
-  // r
-  float getAnguloD() { return anguloD; }
-  void setAnguloD(float angulo)
-  {
-    if (angulo > 70.0f)
-    {
-      anguloD = 70.0f;
-      printf("El valor de anguloD no puede ser mayor que 70. Se ha ajustado a 70.\n");
-    }
-    else if (angulo < -70.0f)
-    {
-      anguloD = -70.0f;
-      printf("El valor de anguloD no puede ser menor que -70. Se ha ajustado a -70.\n");
-    }
-    else
-    {
-      anguloD = angulo;
-    }
-  }
-
-  // t
-  float getAnguloE() { return anguloE; }
-  void setAnguloE(float angulo) { anguloE = angulo; }
-
-  // y
-  float getAnguloF() { return anguloF; }
-  void setAnguloF(float angulo)
-  {
-    if (angulo > 120.0f)
-    {
-      anguloF = 120.0f;
-      printf("El valor de anguloF no puede ser mayor que 120. Se ha ajustado a 120.\n");
-    }
-    else if (angulo < -120.0f)
-    {
-      anguloF = -120.0f;
-      printf("El valor de anguloD no puede ser menor que -120. Se ha ajustado a -120.\n");
-    }
-    else
-    {
-      anguloF = angulo;
-    }
-  }
-
-  // u
-  //-5,40
-  float getAnguloG() { return anguloG; }
-  void setAnguloG(float angulo)
-  {
-    if (angulo < -50.0f)
-    {
-      anguloG = -50.0f;
-      printf("El valor de anguloG no puede ser mayor que 40. Se ha ajustado a 40.\n");
-    }
-    else if (angulo > 10.0f)
-    {
-      anguloG = 10.0f;
-      printf("El valor de anguloG no puede ser menor que -5. Se ha ajustado a -5.\n");
-    }
-    else
-    {
-      anguloG = angulo;
-    }
-  }
-
-  float getAnguloH() { return anguloH; }
-  void setAnguloH(float angulo)
-  {
-    if (angulo > 50.0f)
-    {
-      anguloH = 50.0f;
-      printf("El valor de anguloG no puede ser mayor que 40. Se ha ajustado a 40.\n");
-    }
-    else if (angulo < -10.0f)
-    {
-      anguloH = -10.0f;
-      printf("El valor de anguloG no puede ser menor que -5. Se ha ajustado a -5.\n");
-    }
-    else
-    {
-      anguloH = angulo;
-    }
-  }
-
-  // a
-  //  30 0
-  float getAnguloI() { return anguloI; }
-  void setAnguloI(float angulo)
-  {
-    if (angulo > 0.30f)
-    {
-      anguloI = 0.30f;
-      printf("El valor de anguloI no puede ser mayor que 30. Se ha ajustado a 30.\n");
-    }
-    else if (angulo < 0.0f)
-    {
-      anguloI = 0.0f;
-      printf("El valor de anguloI no puede ser menor que 0. Se ha ajustado a 0.\n");
-    }
-    else
-    {
-      anguloI = angulo;
-    }
-  }
-
-  void A()
-  {
-    //
-    glPushMatrix();
-    // 1. Set up, poner la figura en el medio
-    glTranslatef(0.35, 0.2, 0);
-
-    mallaA.draw();
-    glPopMatrix();
-  }
-
-  // rotacion sobre el eje Y
-  void B()
-  {
-    glPushMatrix();
-    // glRotatef(get_roty(), 0, 0, 1); // angulo A
-    glRotatef(anguloA, 0, 0, 1);
-
-    glTranslatef(0, 0.55, -0.5);
-    mallaB.draw();
-
-    // colocar C en B sin rotacion de C ni de -90
-    glPushMatrix();
-    glRotatef(11, 0, 0, 1);
-    glTranslatef(-0.22, -0.53, 0.75);
-    C();
-
-    glPopMatrix();
-
-    /*
-    glPushMatrix();
-    glRotatef(11, 0, 0, 1);
-    glTranslatef(-0.22, -0.53, 1.5);
-    E();
-    glPopMatrix();
-    */
-
-    glPopMatrix();
-  }
-
-  void C()
-  {
-    glPushMatrix();
-
-    // glRotatef(get_roty(), 1, 0, 0); // angulo B
-    glRotatef(anguloB, 1, 0, 0);
-    glTranslatef(0.22, 0.54, -0.75);
-    glRotatef(-11, 0, 0, 1);
-    mallaC.draw();
-
-    glPushMatrix();
-    glTranslatef(0, -0.54, 0.85);
-    D();
-    glPopMatrix();
-
-    // repetimos el proceso para E F, misma pieza misma rotacion
-
-    glPopMatrix();
-  }
-
-  void E()
-  {
-
-    glPushMatrix();
-
-    // glRotatef(get_roty(), 1, 0, 0); // Angulo D
-    glRotatef(anguloD, 1, 0, 0); // Angulo D
-    glTranslatef(0.22, 0.54, -0.75);
-    glRotatef(-11, 0, 0, 1);
-    mallaE.draw();
-
-    glPushMatrix();
-    glTranslatef(0, -0.54, 0.85);
-    F();
-    glPopMatrix();
-
-    // repetimos el proceso para E F, misma pieza misma rotacion
-
-    glPopMatrix();
-  }
-
-  void D()
-  {
-    glPushMatrix();
-    // glRotatef(get_roty(), 0, 0, 1);// Angulo C
-    glRotatef(anguloC, 0, 0, 1); // Angulo C
-    glRotatef(3, 0, 0, 1);
-    glTranslatef(0, 0.54, -0.85);
-    mallaD.draw();
-
-    glPushMatrix();
-    glRotatef(11, 0, 0, 1);
-    glTranslatef(-0.22, -0.53, 1.5);
-    E();
-    glPopMatrix();
-
-    glPopMatrix();
-  }
-
-  void F()
-  {
-    glPushMatrix();
-    // glRotatef(get_roty(), 0, 0, 1); // Angulo E
-    glRotatef(anguloE, 0, 0, 1); // Angulo E
-    glRotatef(3, 0, 0, 1);
-    glTranslatef(0, 0.54, -0.85);
-    mallaF.draw();
-
-    glPushMatrix();
-
-    glTranslatef(0.15, -0.5, 1.5);
-    glRotatef(9, 0, 0, 1);
-    glRotatef(-90, 0, 1, 0);
-    G();
-    glPopMatrix();
-
-    glPopMatrix();
-  }
-
-  void G()
-  {
-    glPushMatrix();
-
-    glScaled(1.3, 1.3, 1.3);
-
-    glRotatef(anguloF, 0, 0, 1); // Angulo F
-
-    glPushMatrix();
-    glTranslatef(0, 0, 0.118);
-    glRotatef(90, 0, 1, 0);
-    I();
-    glPopMatrix();
-
-    glTranslatef(-0.05, 0, 0);
-    glRotatef(-23, 0, 0, 1);
-    glRotatef(15, 1, 0, 0);
-    glRotatef(-38, 0, 1, 0);
-    glTranslated(0, 1.27, -1.65);
-    mallaG.draw();
-
-    glPopMatrix();
-  }
-
-  void I()
-  {
-    glPushMatrix();
-
-    // glRotatef(get_roty(), 0, 0, 1);
-    glTranslatef(0, 0, anguloI); // me gustaria moverlo sobr el eje Z, angulo I
-
-    glPushMatrix();
-    glTranslatef(-0.05, -0.01, 0.7);
-    J();
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0.05, 0.01, 0.7);
-    K();
-    glPopMatrix();
-
-    glScaled(0.8, 0.8, 0.8);
-    glRotatef(-180, 1, 0, 0);
-    glRotatef(90, 0, 0, 1);
-    glTranslatef(-0.128, -0.055, -0.72);
-    glRotatef(-23, 1, 0, 0);
-    glRotatef(46, 0, 1, 0);
-    glTranslatef(-0.5, 1, -1.15);
-    mallaH.draw(); // traslada sobre un eje, no rota
-
-    glPopMatrix();
-  }
-
-  void J()
-  {
-
-    glPushMatrix();
-
-    glRotatef(anguloG, 0, 1, 0); // angulo G
-
-    glRotatef(-135, 0, 1, 0);
-
-    glTranslatef(-0.05, 0, -0.05);
-    glRotatef(40, 0, 0, 1);
-    glRotatef(-80, 1, 0, 0);
-    glTranslatef(-0.65, 0.9, -1.15);
-    mallaI.draw();
-    glPopMatrix();
-  }
-
-  void K()
-  {
-    glPushMatrix();
-
-    // glRotatef(get_roty(),0,1,0); // angulo H
-    glRotatef(anguloH, 0, 1, 0); // angulo H
-
-    glRotatef(180, 0, 0, 1);
-
-    glRotatef(-130, 0, 1, 0);
-
-    glTranslatef(-0.05, 0, -0.05);
-    glRotatef(40, 0, 0, 1);
-    glRotatef(-80, 1, 0, 0);
-    glTranslatef(-0.65, 0.9, -1.15);
-    mallaI.draw();
-    glPopMatrix();
-  }
-
-  void animacion()
-  {
-    static float angulo = 0.0f;
-    angulo += 1.0f;
-
-    setAnguloA(sin(angulo * M_PI / 180.0f) * 35.0f);
-    setAnguloB(sin(angulo * M_PI / 180.0f) * 70.0f);
-    setAnguloC(sin(angulo * M_PI / 180.0f) * 90.0f);
-    setAnguloD(sin(angulo * M_PI / 180.0f) * 70.0f);
-    setAnguloE(sin(angulo * M_PI / 180.0f) * 45.0f);
-    setAnguloF(sin(angulo * M_PI / 180.0f) * 120.0f);
-    setAnguloG(sin(angulo * M_PI / 180.0f) * 50.0f);
-    setAnguloH(sin(angulo * M_PI / 180.0f) * 50.0f);
-    setAnguloI(sin(angulo * M_PI / 180.0f) * 0.30f);
-  }
-
-  // E F
-
-  void draw()
-  {
-
-    // base
-    float blanco[4] = {1, 1, 1, 1};
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, blanco);
-
-    // set_roty(0);
-
-    glRotated(-90, 1, 0, 0);
-    glScaled(2, 2, 2);
-
-    glPushMatrix();
-
-    A();
-    glTranslatef(0.36, -0.35, 0.5); // mirandolo sin rotated -90
-
-    B();
-
-    // animacion(); // aqui va bien
-
-    // A();
-    // B();
-    // C();
-    // D();
-    // E();
-    // F();
-    // G();
-    //  I();
-    // J();
-
-    // Pieza B
-
-    /*
-    glRotatef(anguloA, 0, 0, 1);
-
-    glTranslatef(0, 0.55, -0.5);
-    mallaB.draw();
-    */
-
-    // Pieza C
-    /*
-    glRotatef(anguloB, 1, 0, 0);
-     glTranslatef(0.22, 0.54, -0.75);
-     glRotatef(-11, 0, 0, 1);
-     mallaC.draw();
-     */
-
-    // Pieza D
-    /*
-    glRotatef(anguloC, 0, 0, 1); // Angulo C
-    glRotatef(3, 0, 0, 1);
-    glTranslatef(0, 0.54, -0.85);
-    mallaD.draw();
-    */
-
-    // Pieza E
-    /*
-    glRotatef(anguloD, 1, 0, 0); // Angulo D
-    glTranslatef(0.22, 0.54, -0.75);
-    glRotatef(-11, 0, 0, 1);
-    mallaE.draw();
-    */
-
-    // Pieza F
-    /*
-    glRotatef(anguloE, 0, 0, 1); // Angulo E
-     glRotatef(3, 0, 0, 1);
-     glTranslatef(0, 0.54, -0.85);
-     mallaF.draw();
-     */
-
-    // Pieza G
-    /*
-    glRotatef(anguloF, 0, 0, 1); // Angulo F
-    glTranslatef(-0.05, 0, 0);
-    glRotatef(-23, 0, 0, 1);
-    glRotatef(15, 1, 0, 0);
-    glRotatef(-38, 0, 1, 0);
-    glTranslated(0, 1.27, -1.65);
-    mallaG.draw();
-    */
-
-    // Pieza H
-    /*
-    glTranslatef(0,0,anguloI); //me gustaria moverlo sobr el eje Z, angulo I
-    glScaled(0.8, 0.8, 0.8);
-    glRotatef(-180, 1, 0, 0);
-    glRotatef(90, 0, 0, 1);
-    glTranslatef(-0.128, -0.055, -0.72);
-    glRotatef(-23, 1, 0, 0);
-    glRotatef(46, 0, 1, 0);
-    glTranslatef(-0.5, 1, -1.15);
-    mallaH.draw(); // traslada sobre un eje, no rota
-    */
-
-    // Pieza I
-    // J();
-
-    // Pieza J
-    // K();
-
-    glPopMatrix();
-  }
-
-  void draw_animacion()
-  {
-    // base
-    float blanco[4] = {1, 1, 1, 1};
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, blanco);
-
-    // set_roty(0);
-
-    glRotated(-90, 1, 0, 0);
-    glScaled(2, 2, 2);
-
-    glPushMatrix();
-
-    A();
-    glTranslatef(0.36, -0.35, 0.5); // mirandolo sin rotated -90
-
-    B();
-
-    animacion();
-
-    glPopMatrix();
-  }
-};
-
-BrazoMecanico brazoMecanico;
 
 void global_setAnguloA(float angulo)
 {
@@ -1231,8 +498,11 @@ public:
   {
     glPushMatrix();
     glScalef(0.5, 0.5, 0.5);
+
     GLfloat color2[4] = {1.0f, 0.0f, 0.0f, 1.0f}; // Red
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color2);
+
+    aplicarMaterial(mallaCoche);
     if (sombreadoCoche)
     {
       mallaCoche.drawSmooth(); // Dibuja con sombreado suave
@@ -1241,11 +511,15 @@ public:
     {
       mallaCoche.drawFlat(); // Dibuja con sombreado plano
     }
+
+    // printf("Brillo Coche: %f\n", mallaCoche.getShininess());
+
     glPopMatrix();
 
     // Dibujamos el cubo
     glPushMatrix();
     glTranslatef(5, 0, 0);
+
     GLfloat color3[4] = {0.5f, 0.0f, 0.5f, 1.0f}; // Violet
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color3);
     if (sombreadoCubo)
@@ -1256,6 +530,8 @@ public:
     {
       mallaCubo.drawFlat(); // Dibuja con sombreado plano
     }
+    //   printf("Brillo Cubo: %f\n", mallaCubo.getShininess());
+
     glPopMatrix();
   }
 
@@ -1280,58 +556,114 @@ public:
 
   void drawEscena4()
   {
-
     glPushMatrix();
-
-    glTranslatef(-0.5, -0.5, -0.5);
-    dado.draw();
-
-    glPopMatrix();
-
-
-    glPushMatrix();
-
-    glTranslatef(-10, 0, 0);
 
     // Beethoven Vidrio
-    mallaBeethoven.setDiffuseReflectivity(0.0f, 0.5f, 0.0f);  // Color verde difuso
-    mallaBeethoven.setSpecularReflectivity(0.9f, 0.9f, 0.9f); // Alta reflectividad especular
-    mallaBeethoven.setAmbientReflectivity(0.1f, 0.1f, 0.1f);  // Baja reflectividad ambiente
-    mallaBeethoven.setShininess(200.0f);                      // Brillo muy alto
+    glPushMatrix();
+    glTranslatef(-10, 0, 0);
+    glRotatef(get_roty(), 0, 1, 0);
+
+    aplicarMaterial(mallaBeethoven);
+
     mallaBeethoven.draw();
     glPopMatrix();
 
+    // Taza Madera
     glPushMatrix();
 
-    // Vaca Goma
+    if (getCambioModelo()){
+      // lobo
+      
+      glTranslatef(10, 0, 0);
+      glScalef(10, 10, 10);
+      glRotatef(get_roty(), 0, 1, 0);
+      glRotatef(-90, 1, 0, 0);
+      aplicarMaterial(mallaLobo);
+      // para solo actualizarlo una vez
+      static int tipoTexturaAnterior = -1;
+      if (tipoTextura != tipoTexturaAnterior)
+      {
+        if (tipoTextura == 0)
+        {
+          mallaLobo.asignarTextura("recursos/madera.jpg");
+        }
+        else
+        {
+          mallaLobo.asignarTextura("recursos/marmol.jpg");
+        }
+        tipoTexturaAnterior = tipoTextura; 
+      }
+      mallaLobo.drawConTexturaCilindrica();
+      // mallaLobo.drawConTextura();
+      
+    } else {
+      // taza
+      glTranslatef(10, 0, 0);
+      glScalef(5, 5, 5);
+      glRotatef(get_roty(), 0, 1, 0);
+
+      aplicarMaterial(mallaTaza);
+      // para solo actualizarlo una vez
+      static int tipoTexturaAnterior = -1;
+      if (tipoTextura != tipoTexturaAnterior)
+      {
+        if (tipoTextura == 0)
+        {
+          mallaTaza.asignarTextura("recursos/madera.jpg");
+        }
+        else
+        {
+          mallaTaza.asignarTextura("recursos/marmol.jpg");
+        }
+        tipoTexturaAnterior = tipoTextura; 
+      }
+      mallaTaza.drawConTexturaCilindrica();
+      // mallaTaza.drawConTextura();
+
+    }
+
+
+    
+
+    
+
+    
+
+    glPopMatrix();
+
+    // Vaca Oro
+    glPushMatrix();
     glTranslatef(0, 0, 10);
-    mallaVaca.setDiffuseReflectivity(0.8f, 0.0f, 0.0f);  // Color rojo difuso
-    mallaVaca.setSpecularReflectivity(0.2f, 0.2f, 0.2f); // Baja reflectividad especular
-    mallaVaca.setAmbientReflectivity(0.0f, 0.2f, 0.0f);  // Baja reflectividad ambiente
-    mallaVaca.setShininess(20.0f);                       // Brillo bajo
+    glRotatef(get_roty(), 0, 1, 0);
+
+    aplicarMaterial(mallaVaca);
     mallaVaca.draw();
     glPopMatrix();
 
-    // hervidor Mate
     glPushMatrix();
     glTranslatef(0, 0, -10);
-    mallaTeapot.setDiffuseReflectivity(0.4f, 0.4f, 0.4f);  // Color gris difuso
-    mallaTeapot.setSpecularReflectivity(0.1f, 0.1f, 0.1f); // Baja reflectividad especular
-    mallaTeapot.setAmbientReflectivity(0.2f, 0.2f, 0.2f);  // Baja reflectividad ambiente
-    mallaTeapot.setShininess(10.0f);                       // Brillo bajo
-    mallaTeapot.draw();
+    glRotatef(get_roty(), 0, 1, 0);
+    glRotatef(-90, 1, 0, 0);
 
+    // Brillo bajo
+    aplicarMaterial(mallaTeapot);
+    mallaTeapot.draw();
     glPopMatrix();
 
-    // Coche Oro
     glPushMatrix();
 
-    glTranslatef(10, 0, 0);
-    mallaCoche.setDiffuseReflectivity(0.83f, 0.69f, 0.22f);  // Color dorado difuso
-    mallaCoche.setSpecularReflectivity(0.99f, 0.94f, 0.81f); // Alta reflectividad especular
-    mallaCoche.setAmbientReflectivity(0.25f, 0.20f, 0.07f);  // Reflectividad ambiente moderada
-    mallaCoche.setShininess(100.0f);                         // Brillo alto
-    mallaCoche.draw();
+    glRotatef(-get_roty(), 0, 1, 0);
+
+    glTranslatef(-0.5, -0.5, -0.5);
+
+    GLfloat color3[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // Blanco
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color3);
+
+    dado.draw();
+    // cubo1.draw(); // dibujo el cubo
+    // mallaCubo.draw();
+
+    glPopMatrix();
 
     glPopMatrix();
   }
@@ -1354,14 +686,17 @@ void Dibuja(void)
   {
   case 1:
     escena.drawEscena1();
+
     break;
 
   case 2:
     escena.drawEscena2();
+
     break;
 
   case 3:
     escena.drawEscena3();
+
     break;
 
   case 4:
@@ -1380,7 +715,6 @@ Procedimiento de fondo. Es llamado por glut cuando no hay eventos pendientes.
 **/
 void idle(int v)
 {
-
   glutPostRedisplay();        // Redibuja
   glutTimerFunc(30, idle, 0); // Vuelve a activarse dentro de 30 ms
 }

@@ -59,6 +59,11 @@ void setSombreadoCubo(int estado);
 
 int getSombreadoCubo();
 
+void setSombreadoBrazo(int estado);
+
+int getSombreadoBrazo();
+
+
 void setEscena(int e);
 
 int getEscena();

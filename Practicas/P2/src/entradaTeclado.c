@@ -146,7 +146,7 @@ void letra(unsigned char k, int x, int y)
   default:
     return;
   }
-  // setCamara (rotxCamara, rotyCamara, 0.0, dCamara);
+  setCamara (rotxCamara, rotyCamara, 0.0, dCamara);
   glutPostRedisplay(); // Algunas de las opciones cambian paramentros
 } // de la camara. Es necesario actualziar la imagen
 

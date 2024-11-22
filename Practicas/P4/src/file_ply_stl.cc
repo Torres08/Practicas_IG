@@ -101,12 +101,13 @@ namespace ply
   }
 
   //**********************************************************************
-
   void leer_vertices(unsigned num_vertices, vector<float> &vertices,
                      ifstream &src)
   {
     char buffer[unsigned(tam_buffer)];
     string token;
+
+    bool has_texture_coords = false; //
 
     // leer vértices:
 
@@ -137,7 +138,82 @@ namespace ply
          << flush;
   }
 
-  //**********************************************************************
+  void leer_vertices2(unsigned num_vertices, vector<float> &vertices, ifstream &src)
+{
+    char buffer[unsigned(tam_buffer)];
+    string token;
+
+    bool has_texture_coords = false;
+
+    // Leer la cabecera para comprobar si existen las propiedades s y t
+    while (true)
+    {
+        src.getline(buffer, tam_buffer);
+        string line(buffer);
+
+        if (line == "end_header")
+        {
+            break;
+        }
+
+        if (line.find("property float s") != string::npos || line.find("property float t") != string::npos)
+        {
+            has_texture_coords = true;
+        }
+    }
+
+    // Ajustar el tamaño del vector de vértices según las propiedades presentes
+    if (has_texture_coords)
+    {
+        vertices.resize(num_vertices * 2);
+    }
+    else
+    {
+        vertices.resize(num_vertices * 3);
+    }
+
+    cout << "  leyendo " << num_vertices << " vértices ...." << endl
+         << flush;
+
+    for (long long iv = 0; iv < num_vertices; iv++)
+    {
+        if (src.eof())
+            error("fin de archivo prematuro en la lista de vértices");
+
+        if (has_texture_coords)
+        {
+            double s, t;
+            src >> s >> t;
+            cout << "vertex #" << iv << " readed: (" << s << "," << t << ")" << endl;
+
+            src.getline(buffer, tam_buffer); // ignore more properties, so far ...
+
+            // add new vertex
+            long long base = iv * 2;
+            vertices[base + 0] = s;
+            vertices[base + 1] = t;
+        }
+        else
+        {
+            double x, y, z;
+            src >> x >> y >> z;
+            cout << "vertex #" << iv << " readed: (" << x << "," << y << "," << z << ")" << endl;
+
+            src.getline(buffer, tam_buffer); // ignore more properties, so far ...
+
+            // add new vertex
+            long long base = iv * 3;
+            vertices[base + 0] = x;
+            vertices[base + 1] = y;
+            vertices[base + 2] = z;
+        }
+    }
+    cout << "  fin de la lista de vértices" << endl
+         << flush;
+}
+
+
+//**********************************************************************
 
 /*
   void leer_caras(unsigned num_vertices, unsigned num_caras,
@@ -180,177 +256,219 @@ namespace ply
     }
     cout << "  fin de la lista de caras." << endl;
   }
-*/
 
-void leer_caras (unsigned num_vertices, unsigned num_caras,
-                 vector<int> &caras, ifstream &src) {
-    char buffer[unsigned(tam_buffer)];
-    string token;
-
-    cout << "  leyendo " << num_caras << " caras ...." << endl << flush;
-
-    for (long long ifa = 0; ifa < num_caras; ifa++) {
-        if (src.eof())
-            error("fin de archivo prematuro en la lista de caras");
-
-        unsigned nv;
-        src >> nv;
-
-        if (nv < 3)
-            error("encontrada una cara con menos de 3 vértices");
-
-        // Read all vertex indices of the face
-        vector<long long> face_vertices(nv);
-        for (unsigned i = 0; i < nv; i++) {
-            src >> face_vertices[i];
-
-            if (face_vertices[i] >= num_vertices)
-                error("encontrado algún índice de vértice igual o superior al número de vértices");
-        }
-
-        // If the face has more than 3 vertices, we need to tessellate it
-        for (unsigned i = 1; i < nv - 1; i++) {
-            caras.push_back(face_vertices[0]);
-            caras.push_back(face_vertices[i]);
-            caras.push_back(face_vertices[i + 1]);
-        }
-
-        src.getline(buffer, tam_buffer); // Ignore more properties, if any
-    }
-    cout << "  fin de la lista de caras." << endl;
-}
-
-  //**********************************************************************
-
-  void leer_cabecera(ifstream &src, unsigned &num_vertices,
-                     unsigned &num_caras, const bool lee_num_caras)
+  void leer_vertices(unsigned num_vertices, vector<float> &vertices,
+                     ifstream &src)
   {
     char buffer[unsigned(tam_buffer)];
     string token;
-    unsigned state = 0; // 0 antes de leer 'element vertex' (o 'element face'), 1 antes de leer 'element face', 2 después
-    bool en_cabecera = true;
-    long long int nv = 0, nc = 0;
 
-    // leer cabecera:
+    bool has_texture_coords = false; //
 
-    while (en_cabecera)
+    // leer vértices:
+
+    vertices.resize(num_vertices * 3);
+
+    cout << "  leyendo " << num_vertices << " vértices ...." << endl
+         << flush;
+
+    for (long long iv = 0; iv < num_vertices; iv++)
     {
       if (src.eof())
-        error("fin de archivo prematuro antes de end_header");
+        error("fin de archivo prematuro en la lista de vértices");
 
-      src >> token;
+      double x, y, z;
 
-      if (token == "end_header")
-      {
-        if (state != 2)
-          error("no encuentro 'element vertex' o 'element face' en la cabecera");
-        src.getline(buffer, tam_buffer);
-        en_cabecera = false;
-      }
-      else if (token == "comment")
-      {
-        src.getline(buffer, tam_buffer);
-        cout << "  comment: " << buffer << endl;
-      }
-      else if (token == "format")
-      {
-        src >> token;
-        if (token != "ascii")
-        {
-          string msg =
-              string("el formato del ply no es 'ascii' es '") + token +
-              "', no lo puedo leer";
-          error(msg.c_str());
-        }
-        src.getline(buffer, tam_buffer);
-      }
-      else if (token == "element")
-      {
-        src >> token;
-        if (token == "vertex")
-        {
-          if (state != 0)
-            error("la línea 'element vertex' va después de 'element face'");
-          src >> nv;
-          cout << "  numero de vértices == " << nv << endl;
-          state = lee_num_caras ? 1 : 2;
-        }
-        else if (lee_num_caras && token == "face")
-        {
-          if (state != 1)
-            error("'element vertex' va después de 'element face'");
-          src >> nc;
-          cout << "  número de caras == " << nc << endl;
-          state = 2;
-        }
-        else
-        {
-          cout << "  elemento '" + token + "' ignorado." << endl;
-        }
-        src.getline(buffer, tam_buffer);
-      }
-      else if (token == "property")
-      {
-        src.getline(buffer, tam_buffer); // ignore properties, so far ...
-      }
-    } // end of while( en_cabecera )
+      src >> x >> y >> z;
+      // cout << "vertex #" << iv << " readed: (" << x << "," << y << "," << z << ")" << endl ;
 
-    if (nv <= 0)
-      error("no se ha encontrado el número de vértices, o bien es 0 o negativo");
+      src.getline(buffer, tam_buffer); // ignore more properties, so far ...
 
-    if (lee_num_caras)
-      if (nc <= 0)
-        error("no se ha encontrado el número de caras, o bien es 0 o negativo");
-
-    if (nv > numeric_limits<int>::max())
-      error("el número de vértices es superior al valor 'int' más grande posible.");
-
-    if (lee_num_caras)
-      if (nc > numeric_limits<int>::max())
-        error("el número de caras es superior al valor 'int' más grande posible.");
-
-    num_vertices = unsigned(nv);
-    num_caras = unsigned(nc);
-  }
-
-  //**********************************************************************
-
-  void abrir_archivo(string &nombre_archivo, ifstream &src)
-  {
-    using namespace std;
-    char buffer[unsigned(tam_buffer)];
-    string token;
-
-    src.open(nombre_archivo.c_str()); // abrir (¿en modo lectura?)
-
-    if (!src.is_open())
-    {
-      string msg =
-          string("no puedo abrir el archivo '") + nombre_archivo +
-          "' para lectura.";
-      error(msg.c_str());
+      // add new vertex
+      long long base = iv * 3;
+      vertices[base + 0] = x;
+      vertices[base + 1] = y;
+      vertices[base + 2] = z;
     }
+    cout << "  fin de la lista de vértices" << endl
+         << flush;
+  }
+*/
+
+void leer_caras(unsigned num_vertices, unsigned num_caras,
+                vector<int> &caras, ifstream &src)
+{
+  char buffer[unsigned(tam_buffer)];
+  string token;
+
+  cout << "  leyendo " << num_caras << " caras ...." << endl
+       << flush;
+
+  for (long long ifa = 0; ifa < num_caras; ifa++)
+  {
+    if (src.eof())
+      error("fin de archivo prematuro en la lista de caras");
+
+    unsigned nv;
+    src >> nv;
+
+    if (nv < 3)
+      error("encontrada una cara con menos de 3 vértices");
+
+    // Read all vertex indices of the face
+    vector<long long> face_vertices(nv);
+    for (unsigned i = 0; i < nv; i++)
+    {
+      src >> face_vertices[i];
+
+      if (face_vertices[i] >= num_vertices)
+        error("encontrado algún índice de vértice igual o superior al número de vértices");
+    }
+
+    // If the face has more than 3 vertices, we need to tessellate it
+    for (unsigned i = 1; i < nv - 1; i++)
+    {
+      caras.push_back(face_vertices[0]);
+      caras.push_back(face_vertices[i]);
+      caras.push_back(face_vertices[i + 1]);
+    }
+
+    src.getline(buffer, tam_buffer); // Ignore more properties, if any
+  }
+  cout << "  fin de la lista de caras." << endl;
+}
+
+//**********************************************************************
+
+void leer_cabecera(ifstream &src, unsigned &num_vertices,
+                   unsigned &num_caras, const bool lee_num_caras)
+{
+  char buffer[unsigned(tam_buffer)];
+  string token;
+  unsigned state = 0; // 0 antes de leer 'element vertex' (o 'element face'), 1 antes de leer 'element face', 2 después
+  bool en_cabecera = true;
+  long long int nv = 0, nc = 0;
+
+  // leer cabecera:
+
+  while (en_cabecera)
+  {
+    if (src.eof())
+      error("fin de archivo prematuro antes de end_header");
 
     src >> token;
 
-    if (token != "ply")
-      error("el archivo de entrada no comienza con 'ply'");
+    if (token == "end_header")
+    {
+      if (state != 2)
+        error("no encuentro 'element vertex' o 'element face' en la cabecera");
+      src.getline(buffer, tam_buffer);
+      en_cabecera = false;
+    }
+    else if (token == "comment")
+    {
+      src.getline(buffer, tam_buffer);
+      cout << "  comment: " << buffer << endl;
+    }
+    else if (token == "format")
+    {
+      src >> token;
+      if (token != "ascii")
+      {
+        string msg =
+            string("el formato del ply no es 'ascii' es '") + token +
+            "', no lo puedo leer";
+        error(msg.c_str());
+      }
+      src.getline(buffer, tam_buffer);
+    }
+    else if (token == "element")
+    {
+      src >> token;
+      if (token == "vertex")
+      {
+        if (state != 0)
+          error("la línea 'element vertex' va después de 'element face'");
+        src >> nv;
+        cout << "  numero de vértices == " << nv << endl;
+        state = lee_num_caras ? 1 : 2;
+      }
+      else if (lee_num_caras && token == "face")
+      {
+        if (state != 1)
+          error("'element vertex' va después de 'element face'");
+        src >> nc;
+        cout << "  número de caras == " << nc << endl;
+        state = 2;
+      }
+      else
+      {
+        cout << "  elemento '" + token + "' ignorado." << endl;
+      }
+      src.getline(buffer, tam_buffer);
+    }
+    else if (token == "property")
+    {
+      src.getline(buffer, tam_buffer); // ignore properties, so far ...
+    }
+  } // end of while( en_cabecera )
 
-    src.getline(buffer, tam_buffer);
+  if (nv <= 0)
+    error("no se ha encontrado el número de vértices, o bien es 0 o negativo");
 
-    cout << "leyendo archivo ply '" + nombre_archivo + "'" << endl;
-  }
+  if (lee_num_caras)
+    if (nc <= 0)
+      error("no se ha encontrado el número de caras, o bien es 0 o negativo");
 
-  //**********************************************************************
+  if (nv > numeric_limits<int>::max())
+    error("el número de vértices es superior al valor 'int' más grande posible.");
 
-  void error(const char *msg_error)
+  if (lee_num_caras)
+    if (nc > numeric_limits<int>::max())
+      error("el número de caras es superior al valor 'int' más grande posible.");
+
+  num_vertices = unsigned(nv);
+  num_caras = unsigned(nc);
+}
+
+//**********************************************************************
+
+void abrir_archivo(string &nombre_archivo, ifstream &src)
+{
+  using namespace std;
+  char buffer[unsigned(tam_buffer)];
+  string token;
+
+  src.open(nombre_archivo.c_str()); // abrir (¿en modo lectura?)
+
+  if (!src.is_open())
   {
-    using namespace std;
-    cout << "error leyendo archivo ply: " << msg_error << endl
-         << "programa terminado." << endl
-         << flush;
-
-    exit(1);
+    string msg =
+        string("no puedo abrir el archivo '") + nombre_archivo +
+        "' para lectura.";
+    error(msg.c_str());
   }
+
+  src >> token;
+
+  if (token != "ply")
+    error("el archivo de entrada no comienza con 'ply'");
+
+  src.getline(buffer, tam_buffer);
+
+  cout << "leyendo archivo ply '" + nombre_archivo + "'" << endl;
+}
+
+//**********************************************************************
+
+void error(const char *msg_error)
+{
+  using namespace std;
+  cout << "error leyendo archivo ply: " << msg_error << endl
+       << "programa terminado." << endl
+       << flush;
+
+  exit(1);
+}
 
 } // fin namespace _file_ply

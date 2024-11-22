@@ -14,15 +14,23 @@
 #include "file_ply_stl.h"
 #include <string>
 #include <cmath>
+#include <tuple>
+#include <limits>
+#include <vector>
+#include <array>
+#include <algorithm>
+#include <initializer_list>
+
 
 using namespace std;
 
 /**
  * @brief Estructura para un vértice
  */
-struct Vertice
+struct Vertice 
 {
-    float x, y, z;
+    float x, y, z; // Coordenadas del vértice
+    float s, t;    // Coordenadas de textura
 };
 
 /**
@@ -59,13 +67,17 @@ private:
     float ambientReflectivity[3] = {0.0f, 0.0f, 0.0f};
     float shininess = 0.0f;
 
+    float x_min, y_min, z_min, x_max, y_max, z_max;
+    float width, height, depth;
+    float dim_max;
+
 public:
     vector<Vertice> vertices;          // Lista de vértices
     vector<Triangulo> triangulos;      // Lista de triángulos
     vector<Normal> normalesVertices;   // Normales por vértice
     vector<Normal> normalesTriangulos; // Normales por triángulo
 
-    //vector<CoordenadaTextura> coordenadasTextura;
+    // vector<CoordenadaTextura> coordenadasTextura;
 
     MiMalla(const char *filename);
 
@@ -79,15 +91,26 @@ public:
     void drawFlat();
     void drawSmooth();
 
+    void drawConTextura();
+    void drawConTexturaCilindrica();
 
     void setDiffuseReflectivity(float r, float g, float b);
     void setSpecularReflectivity(float r, float g, float b);
     void setAmbientReflectivity(float r, float g, float b);
     void setShininess(float s);
 
+    // Getter methods
+    std::tuple<float, float, float> getDiffuseReflectivity() const;
+    std::tuple<float, float, float> getSpecularReflectivity() const;
+    std::tuple<float, float, float> getAmbientReflectivity() const;
+    float getShininess() const;
 
-    //void inicializarCoordenadasTextura();
-
+    void calculateMinMax();
+    void calculateDimensions();
+    float calculateMaxDimension();
+    void normalizeVertices();
+    void processVertices();
+    void enableAutoNormalize();
 };
 
 #endif // MIMALLATRIANGULO_H

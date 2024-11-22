@@ -94,6 +94,8 @@ void setIluminacion(int estado)
 // 1 smooth 0 flat
 int sombreadoCoche = 1;
 int sombreadoCubo = 0;
+int sombreadoBrazoMecanico = 1;
+
 
 /**
  * @brief Obtiene el valor del sombreado de un objeto.
@@ -143,6 +145,25 @@ int getSombreadoCoche()
 void setSombreadoCoche(int estado)
 {
   setSombreado(sombreadoCoche, estado);
+}
+
+/**
+ * @brief Obtiene el valor del sombreado del brazo mecánico.
+ * @return El valor del sombreado del brazo mecánico.
+ */
+int getSombreadoBrazo()
+{
+  return getSombreado(sombreadoBrazoMecanico);
+}
+
+/**
+ * @brief Configura el estado de sombreado del brazo mecánico.
+ * @param estado Un entero que indica el estado del sombreado.
+ *               Si es 1, el sombreado es plano. Si es 0, el sombreado es suave.
+ */
+void setSombreadoBrazo(int estado)
+{
+  setSombreado(sombreadoBrazoMecanico, estado);
 }
 
 /**
@@ -1112,25 +1133,11 @@ public:
 
     if (animacion){
       brazoMecanico.draw_animacion();
-
     } else {
       brazoMecanico.draw();
     }
-    //brazoMecanico.draw();
-
-    //brazoMecanico.draw_animacion();
-
-    /*
-    mallaA.draw();
-    mallaB.draw();
-    //mallaC.draw();
-    //mallaD.draw();
-    mallaE.draw();
-    mallaF.draw();
-    mallaG.draw();
-    //mallaH.draw();
-    //mallaI.draw();
-    */
+    
+    
     glPopMatrix();
   }
 };

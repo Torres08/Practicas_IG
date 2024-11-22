@@ -291,6 +291,19 @@ void letra(unsigned char k, int x, int y)
     printf("iluminacion: %d\n", getIluminacion());
     break;
 
+  case 'd':
+  case 'D': // activar desactivar iluminacion
+    //setDibujado(!getDibujado());
+    setTipoTextura(!getTipoTextura());
+    printf("Cambio Textura: %d\n", getTipoTextura());
+    break;
+  
+  case 'g':
+  case 'G':
+    setCambioModelo(!getCambioModelo());
+    printf("Cambio Modelo: %d\n", getCambioModelo());
+    break;
+
   case 'h':
   case 'H':
     printHelp(); // H y h imprimen ayuda
