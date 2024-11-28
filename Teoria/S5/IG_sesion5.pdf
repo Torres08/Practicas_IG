@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>Enter your username and password</title>
+    <link rel="stylesheet" href="/simplesaml/assets/base/css/stylesheet.css?tag=c2ee7">
+    <link rel="icon" href="/simplesaml/assets/base/icons/favicon.ico?tag=c2ee7">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://idp.ugr.es/simplesaml/module.php/idpugr/assets/css/idpugr.css?tag=c2ee7">
+<link rel="shortcut icon" href="https://idp.ugr.es/simplesaml/module.php/idpugr/assets/icons/favicon.ico?tag=c2ee7">
+<meta name="theme-color" content="#e9e8e8"/>
+
+
+      </head>
+  <body id="core:loginuserpass">
+    <div id="layout">
+    <header id="header">
+  <div class="wrap">
+    <div class="logospace">
+      <div class="v-center logo-header">
+        <div id="logo">
+          <img src="https://idp.ugr.es/simplesaml/module.php/idpugr/assets/icons/logo-mono.svg?tag=c2ee7" class="logo-icon" alt="Universidad de Granada">
+        </div>
+      </div>
+    </div>
+        <div class="menuspace">
+      <a href="" id="menuLink" class="menu-link hide-for-large">
+        <span class="fa fa-globe fa-2x" aria-hidden="true"></span>
+      </a>
+    </div>
+    <div id="languagebar" class="hide-for-large">
+      <div id="menu">
+        <div class="pure-menu">
+          <ul class="pure-menu-list">
+                                  <li><a class="pure-menu-heading" href="#">English</a><li>
+                                                          <li class="pure-menu-item"><a href="?language=es&AuthState=_a54d81b65b1f37a63b67cdfbcb0279e78e6f07d36c:https://idp.ugr.es/simplesaml/saml2/idp/SSOService.php?spentityid=https%3A%2F%2Fpradogrado2425.ugr.es%2Fauth%2Fsaml2%2Fsp%2Fmetadata.php&amp;RelayState=https%3A%2F%2Fpradogrado2425.ugr.es%2Fpluginfile.php%2F1379141%2Fmod_resource%2Fcontent%2F1%2FIG_sesion5.pdf&amp;cookieTime=1730371143" class="pure-menu-link">español</a></li>
+                                              </ul>
+        </div>
+      </div>
+    </div>
+        <div class="menuspace show-for-large">
+      <div class="v-center language-bar">
+        <form id="language-form" class="pure-form" method="get">
+                    <div id="languageform">
+                                      <input type="hidden" name="AuthState" value="_a54d81b65b1f37a63b67cdfbcb0279e78e6f07d36c:https://idp.ugr.es/simplesaml/saml2/idp/SSOService.php?spentityid=https%3A%2F%2Fpradogrado2425.ugr.es%2Fauth%2Fsaml2%2Fsp%2Fmetadata.php&amp;RelayState=https%3A%2F%2Fpradogrado2425.ugr.es%2Fpluginfile.php%2F1379141%2Fmod_resource%2Fcontent%2F1%2FIG_sesion5.pdf&amp;cookieTime=1730371143">
+                                      <select aria-label="Language" class="pure-input-1-4 language-menu" name="language" id="language-selector">
+                                        <option value="en" selected="selected">&#127760; English</option>
+                                                      <option value="es">español</option>
+                                      </select>
+            <noscript>
+              <button type="submit" class="pure-button">
+                <i class="fa fa-arrow-right"></i>
+              </button>
+            </noscript>
+          </div>
+                  </form>
+      </div>    </div>  </div></header>
+
+      <main>
+      <div id="content">
+        <div class="wrap">
+          
+<div id="portalmenu" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+
+    <div id="portalcontent" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+
+
+    <h1>Enter your username and password</h1>
+
+    <p>A service has requested you to authenticate yourself. Please enter your username and password in the form below.</p>
+    <div class="center-form login-form-start">
+        <form id="f" class="pure-form pure-form-aligned" action="https://idp.ugr.es/simplesaml/module.php/core/loginuserpass?AuthState=_a54d81b65b1f37a63b67cdfbcb0279e78e6f07d36c%3Ahttps%3A%2F%2Fidp.ugr.es%2Fsimplesaml%2Fsaml2%2Fidp%2FSSOService.php%3Fspentityid%3Dhttps%253A%252F%252Fpradogrado2425.ugr.es%252Fauth%252Fsaml2%252Fsp%252Fmetadata.php%26RelayState%3Dhttps%253A%252F%252Fpradogrado2425.ugr.es%252Fpluginfile.php%252F1379141%252Fmod_resource%252Fcontent%252F1%252FIG_sesion5.pdf%26cookieTime%3D1730371143" method="post" name="f" spellcheck="false">
+                <div class="pure-control-group">
+                    <label for="username">Username</label>
+                    <input id="username"  placeholder="" type="text" name="username" class="edge" tabindex="1" value="" autocomplete="username"  autofocus  >
+                                </div>
+
+                <div class="pure-control-group">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" tabindex="2" name="password" class="edge" autocomplete="current-password" >
+                </div>
+
+                
+                
+            <div class="pure-control-group center login-form-submit">
+                <button class="pure-button pure-button-red pure-input-1-2 pure-input-sm-1-1 right" id="submit_button"
+                        type="submit" tabindex="6" data-default="Login"
+                        data-processing="Processing...">
+                Login                </button>
+            </div>
+        </form>
+    </div>
+    <ul>
+            </ul>
+    <br><br>
+    <div class="pure-form-message">
+        <strong>Help! I don&#039;t remember my password.</strong>
+        <p>Without your username and password you cannot authenticate yourself for access to the service. There may be someone that can help you. Consult the help desk at your organization!</p>
+    </div>
+
+
+
+    </div>
+</div>
+        </div>
+      </div>      <div id="push"></div>
+      </main>
+    </div>    <div id="foot">
+      <meta name="footer-color" content="#4d4c4d"/>
+<footer id="footer">
+  <div class="wrap">
+    <div class="center footer-links">
+      <a href="https://csirc.ugr.es/">Centro de Servicios Informáticos y Redes de Comunicación</a>
+    </div>
+    <div class="center copyrights">&copy; 2007-2024 <a href="https://simplesamlphp.org/">SimpleSAMLphp</a>
+    </div>
+    <div class="logo-footer-space show-for-large">
+      <div class="logo-footer">
+        <img class="pure-img" src="/simplesaml/assets/base/icons/ssplogo-fish-small.png?tag=c2ee7" alt="Small fish logo">
+      </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script src="/simplesaml/assets/base/js/bundle.js?tag=c2ee7"></script>
+        <script src="https://idp.ugr.es/simplesaml/module.php/core/assets/js/loginuserpass.js?tag=c2ee7"></script>
+  </body>
+</html>
