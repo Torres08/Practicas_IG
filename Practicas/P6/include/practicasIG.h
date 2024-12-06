@@ -32,3 +32,4 @@
 #include  "entradaTeclado.h"
 #include  "visual.h"
 #include  "file_ply_stl.h"
+#include "Escena.h"

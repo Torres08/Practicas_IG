@@ -375,7 +375,7 @@ void MiMalla::drawConTexturaCilindrica()
 
     // Si no se ha asignado reflectividad ambiente, usar la reflectividad difusa
     if (ambientReflectivity[0] == 0.0f && ambientReflectivity[1] == 0.0f && ambientReflectivity[2] == 0.0f)
-    {
+    {º
         ambientReflectivity[0] = diffuseReflectivity[0];
         ambientReflectivity[1] = diffuseReflectivity[1];
         ambientReflectivity[2] = diffuseReflectivity[2];

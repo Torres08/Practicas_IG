@@ -31,6 +31,9 @@
 #include <math.h>
 #include <GL/glut.h>
 #include "practicasIG.h"
+#include "Escena.h"
+
+#include <unistd.h> // Añadir esta línea para declarar sleep
 
 #define __mouse__
 #include "mouse.h"
@@ -86,26 +89,47 @@ void clickRaton(int boton, int estado, int x, int y)
 		int id;
 		if (pick(x, y, &id))
 		{
-			
+
 			/*
 			if (getSelectedObjectId() == id){
 				printf("Deseleccionado: %d\n", id);
-                selectedObjectId = -1;
+				selectedObjectId = -1;
 			} else {
 				printf("Selected object ID: %d\n", id);
-				selectedObjectId = id; 
+				selectedObjectId = id;
 			}
 			*/
-			
+
 			printf("Selected object ID: %d\n", id);
-			selectedObjectId = id; 
-			
+			selectedObjectId = id;
+
 			// aqui es donde habilito y deshabilito la luz
 
-			if (selectedObjectId == 100){ // 100 es boton 
+			// Luz
+			if (selectedObjectId == 100)
+			{ // 100 es boton
+				setBotonAnimacionLuz(true);
+				setBotonAnimacionEscena(false);
+
 				setIluminacion(!getIluminacion());
 			}
-		
+
+			// Escena
+			if (selectedObjectId == 101)
+			{
+
+				setBotonAnimacionEscena(true);
+				setBotonAnimacionLuz(false);
+
+				if (getEscena() == 2)
+				{
+					setEscena(1);
+				}
+				else
+				{
+					setEscena(2);
+				}
+			}
 		}
 		else
 		{

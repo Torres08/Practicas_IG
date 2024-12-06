@@ -54,17 +54,10 @@ MiMalla::MiMalla(const char *filename)
     {
         addTriangulo(temp_triangulos[i], temp_triangulos[i + 1], temp_triangulos[i + 2]);
     }
-    //
 
     for (size_t i = 0; i < temp_texturas.size(); i += 2)
     {
-        /*
-             Vertice v;
-            v.x = x;
-            v.y = y;
-            v.z = z;
-            vertices.push_back(v);
-        */
+        
         CoordenadaTextura ct;
         ct.s = temp_texturas[i];
         ct.t = temp_texturas[i + 1];
@@ -127,7 +120,7 @@ void MiMalla::calcularNormales()
         const Vertice &p1 = vertices[t.v2];
         const Vertice &p2 = vertices[t.v3];
 
-        // Calculamos los vectores de las aristas
+        // Calculamos los vectores de las aristas  /// invertirlo para la luz, probar a ver
         Vertice v1 = {p1.x - p0.x, p1.y - p0.y, p1.z - p0.z};
         Vertice v2 = {p2.x - p0.x, p2.y - p0.y, p2.z - p0.z};
 
@@ -197,6 +190,8 @@ void MiMalla::draw()
         ambientReflectivity[1] = diffuseReflectivity[1];
         ambientReflectivity[2] = diffuseReflectivity[2];
     }
+
+    glShadeModel(GL_SMOOTH); // Establecer el modo de sombreado suave por defecto 
 
     glBegin(GL_TRIANGLES); // Iniciar el dibujo de triángulos
 
@@ -440,3 +435,67 @@ void MiMalla::setId(int _id)
 {
     id = _id;
 };
+
+
+/**
+ * @brief Dibuja la malla con textura esférica. (otra forma que no he optado)
+ */
+void MiMalla::drawConTextura()
+{
+    processVertices();
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texId);
+
+    if (ambientReflectivity[0] == 0.0f && ambientReflectivity[1] == 0.0f && ambientReflectivity[2] == 0.0f)
+    {
+        ambientReflectivity[0] = diffuseReflectivity[0];
+        ambientReflectivity[1] = diffuseReflectivity[1];
+        ambientReflectivity[2] = diffuseReflectivity[2];
+    }
+
+    glShadeModel(GL_SMOOTH); // Establecer el modo de sombreado suave
+
+    // Configurar la generación automática de coordenadas de textura
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+
+    // Ajustar los planos de generación de coordenadas de textura para cubrir todo el cubo
+    GLfloat sPlane[] = {1.0f, 0.0f, 0.0f, 0.5f};
+    GLfloat tPlane[] = {0.0f, 1.0f, 0.0f, 0.5f};
+    glTexGenfv(GL_S, GL_OBJECT_PLANE, sPlane);
+    glTexGenfv(GL_T, GL_OBJECT_PLANE, tPlane);
+
+    glBegin(GL_TRIANGLES);
+    for (size_t i = 0; i < triangulos.size(); i++)
+    {
+        Triangulo t = triangulos[i];
+
+        Vertice v1 = vertices[t.v1];
+        Vertice v2 = vertices[t.v2];
+        Vertice v3 = vertices[t.v3];
+
+        // Establecer la normal para cada vértice
+        Normal n1 = normalesVertices[t.v1];
+        Normal n2 = normalesVertices[t.v2];
+        Normal n3 = normalesVertices[t.v3];
+
+        glNormal3f(n1.x, n1.y, n1.z);
+        glVertex3f(v1.x, v1.y, v1.z);
+
+        glNormal3f(n2.x, n2.y, n2.z);
+        glVertex3f(v2.x, v2.y, v2.z);
+
+        glNormal3f(n3.x, n3.y, n3.z);
+        glVertex3f(v3.x, v3.y, v3.z);
+    }
+    glEnd();
+
+    // Deshabilitar la generación automática de coordenadas de textura
+    glDisable(GL_TEXTURE_GEN_S);
+    glDisable(GL_TEXTURE_GEN_T);
+    glDisable(GL_TEXTURE_2D);
+}
+

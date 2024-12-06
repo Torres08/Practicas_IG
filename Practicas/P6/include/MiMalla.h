@@ -86,9 +86,7 @@ public:
     void addTriangulo(int v1, int v2, int v3);
 
     void draw();
-
     void calcularNormales();
-
 
     void setDiffuseReflectivity(float r, float g, float b);
     void setSpecularReflectivity(float r, float g, float b);
@@ -110,6 +108,9 @@ public:
 
     int getId();
     void setId(int id);
+
+    void drawConTextura();
+    void drawConTexturaCubo();
 };
 
 #endif // MIMALLATRIANGULO_H

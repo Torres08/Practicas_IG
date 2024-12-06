@@ -36,6 +36,7 @@ modulo modelo.c
 #include <GL/glut.h> // Libreria de utilidades de OpenGL
 #include "practicasIG.h"
 #include "Escena.h"
+#include "lector-jpg.h"
 
 /**	void initModel()
 
@@ -43,15 +44,52 @@ Inicializa el modelo y de las variables globales
 
 **/
 
-int numeroEscena = 1;
+int numeroEscena = 2;
 int modo = GL_FILL;
 int iluminacion = 1; // encendido
 
 void initModel()
 {
+
+  // camara
+  setCamara(30.0f, 0.0f, 0.0f, 30.0f);
+
   glEnable(GL_DEPTH_TEST); // Habilitar el depth test
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
+
+  // Escena
+}
+
+/**
+ * @brief Asignar Textura a partir de una ruta de archivo.
+ * @note Con GL_DECAL se ve la textura sin sombra y bien iluminada
+ */
+void Objeto3D::asignarTextura(const char *nombre_arch)
+{
+  unsigned ancho, alto;
+  unsigned char *data = LeerArchivoJPEG(nombre_arch, ancho, alto);
+  if (!data)
+  {
+    std::cerr << "Error al leer la imagen JPEG: " << nombre_arch << std::endl;
+    return;
+  }
+
+  glGenTextures(1, &texId);
+  glBindTexture(GL_TEXTURE_2D, texId);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  // glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, ancho, alto, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+  glEnable(GL_NORMALIZE);
+
+  delete[] data;
 }
 
 /**
@@ -91,11 +129,24 @@ void setIluminacion(int estado)
   iluminacion = estado;
   if (estado)
   {
-    glEnable(GL_LIGHTING); // Activa la iluminación
+    printf("Iluminacion encendida\n");
+    GLfloat colorLuzDifusa[4] = {1.0f, 1.0f, 1.0f, 1.0f};    // Color brillante difuso
+    GLfloat colorLuzEspecular[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // Color brillante especular
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, colorLuzDifusa);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, colorLuzEspecular);
+    glEnable(GL_LIGHT0);
+  
   }
   else
   {
-    glDisable(GL_LIGHTING); // Desactiva la iluminación
+    printf("Iluminacion apagada\n");
+   
+    float color[4] = {0.8, 0.0, 1, 1};
+    GLfloat colorLuzDifusa[4] = {0.1f, 0.1f, 0.1f, 1.0f};    // Color oscuro difuso
+    GLfloat colorLuzEspecular[4] = {0.1f, 0.1f, 0.1f, 1.0f}; // Color oscuro especular
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, colorLuzDifusa);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, colorLuzEspecular);
+    glEnable(GL_LIGHT0);
   }
 }
 
@@ -154,16 +205,9 @@ void dibujoEscena(bool seleccion)
   glPushMatrix();
 
   Escena escena;
+  
+  glEnable(GL_LIGHTING);
 
-  // Iluminación
-  if (getModo() == GL_FILL && getIluminacion())
-  {
-    glEnable(GL_LIGHTING);
-  }
-  else
-  {
-    glDisable(GL_LIGHTING);
-  }
 
   switch (numeroEscena)
   {

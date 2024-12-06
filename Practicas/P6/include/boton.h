@@ -9,13 +9,17 @@
 class Boton : public Objeto3D
 {
     int id;
-    bool animacionCompleta;
+    
 public:
-    Boton();
+    bool animacionCompleta;
+    GLfloat colorArriba[4];
+
+    Boton(int _id, GLfloat _colorArriba[4]);
 
     int getId();
 
     void draw();
+
 
     void animacion();
 

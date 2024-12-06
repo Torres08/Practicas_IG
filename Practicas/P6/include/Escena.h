@@ -13,9 +13,26 @@
 #include "modelo.h"
 #include "boton.h"
 #include "mouse.h"
+#include "MiBrazoMecanico.h"
+
+
+extern bool botonAnimacionLuz;
+
+bool getBotonAnimacionLuz();
+void setBotonAnimacionLuz(bool value);
+
+extern bool botonAnimacionEscena;
+
+bool getBotonAnimacionEscena();
+void setBotonAnimacionEscena(bool value);
+
+void initModelEscena();
 
 class Escena
 {
+private:
+    
+
 public:
     Escena();
 
@@ -26,6 +43,9 @@ public:
     void Escena2(bool seleccion);
 
     void ComenzarAnimacionBoton();
+
+    
+
 };
 
 #endif // ESCENA_H
