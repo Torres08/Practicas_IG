@@ -6,6 +6,7 @@
 #include "file_ply_stl.h"
 #include "MiMalla.h"
 
+void initModelBrazo();
 
 class MiBrazoMecanico : public Objeto3D {
 public:

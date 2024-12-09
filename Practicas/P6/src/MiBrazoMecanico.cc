@@ -3,6 +3,7 @@
 #include "file_ply_stl.h"
 #include "modelo.h"
 #include "practicasIG.h"
+#include "Escena.h"
 
 using namespace std;
 
@@ -15,6 +16,34 @@ MiMalla mallaH("./recursos/Brazo/H.ply");
 MiMalla mallaI("./recursos/Brazo/I.ply");
 MiMalla mallaE("./recursos/Brazo/C.ply");
 MiMalla mallaF("./recursos/Brazo/D.ply");
+
+
+void initModelBrazo(){
+
+  // metal negro
+  
+  mallaA.asignarTextura("recursos/blackDirt.jpeg");
+
+  mallaB.asignarTextura("recursos/orangedirt.jpeg");
+
+  mallaC.asignarTextura("recursos/whitedirt.jpg");
+
+  mallaD.asignarTextura("recursos/orangedirt.jpeg");
+
+  mallaE.asignarTextura("recursos/whitedirt.jpg");
+
+  mallaF.asignarTextura("recursos/orangedirt.jpeg");
+
+  mallaG.asignarTextura("recursos/whitedirt.jpg");
+
+  mallaH.asignarTextura("recursos/metal.jpg");
+
+  mallaI.asignarTextura("recursos/blackDirt.jpeg");
+  
+
+}
+
+
 
 MiBrazoMecanico::MiBrazoMecanico()
 {
@@ -172,7 +201,11 @@ void MiBrazoMecanico::A()
   // 1. Set up, poner la figura en el medio
   // glTranslatef(0.35, 0.2, 0);
   glScaled(2, 2, 2);
-  mallaA.drawSmooth();
+  //mallaA.drawSmooth();
+  
+  //aplicarMaterial(mallaA);
+  mallaA.drawConTexturaCilindrica();
+
   glPopMatrix();
 }
 
@@ -190,7 +223,9 @@ void MiBrazoMecanico::B()
   glRotatef(anguloA, 0, 0, 1);
 
   // glTranslatef(0, 0.55, -0.5);
-  mallaB.drawSmooth();
+  //aplicarMaterial(mallaB);
+  //mallaB.drawSmooth();
+  mallaB.drawConTexturaCilindrica();
 
   // colocar C en B sin rotacion de C ni de -90
   glPushMatrix();
@@ -225,7 +260,9 @@ void MiBrazoMecanico::C()
   // glRotatef(get_roty(), 1, 0, 0); // angulo B
   glRotatef(anguloB, 1, 0, 0);
   glRotatef(-11, 0, 0, 1);
-  mallaC.drawSmooth();
+  aplicarMaterial(mallaC);
+  //mallaC.drawSmooth();
+  mallaC.drawConTexturaCilindrica();
 
   glPushMatrix();
   glTranslatef(-0.05, 0, 1.8);
@@ -251,7 +288,7 @@ void MiBrazoMecanico::E()
   glRotatef(anguloD, 1, 0, 0); // Angulo D
 
   glRotatef(-11, 0, 0, 1);
-  mallaE.drawSmooth();
+  mallaE.drawConTexturaCilindrica();
 
   glPushMatrix();
   glTranslatef(0, 0, 1.85);
@@ -282,7 +319,8 @@ void MiBrazoMecanico::D()
   // glRotatef(anguloC, 0, 0, 1); // Angulo C
 
   glRotatef(3, 0, 0, 1);
-  mallaD.drawSmooth();
+  //mallaD.drawSmooth();
+  mallaD.drawConTexturaCilindrica();
   glPopMatrix();
 
   glPushMatrix();
@@ -301,7 +339,7 @@ void MiBrazoMecanico::F()
   // glRotatef(get_roty(), 0, 0, 1); // Angulo E
   // glRotatef(anguloE, 0, 0, 1); // Angulo E
   glRotatef(3, 0, 0, 1);
-  mallaF.drawSmooth();
+  mallaF.drawConTexturaCilindrica();
 
   glPushMatrix();
 
@@ -343,7 +381,7 @@ void MiBrazoMecanico::G()
   glRotatef(15, 1, 0, 0);
   glRotatef(-38, 0, 1, 0);
 
-  mallaG.drawSmooth();
+  mallaG.drawConTexturaCilindrica();
 
   glPopMatrix();
 }
@@ -371,7 +409,7 @@ void MiBrazoMecanico::I()
   // glTranslatef(-0.128, -0.055, -0.72);
   glRotatef(-23, 1, 0, 0);
   glRotatef(46, 0, 1, 0);
-  mallaH.drawSmooth(); // traslada sobre un eje, no rota
+  mallaH.drawConTexturaCilindrica(); // traslada sobre un eje, no rota
 
   glPopMatrix();
 }
@@ -391,7 +429,7 @@ void MiBrazoMecanico::J()
   glRotatef(40, 0, 0, 1);
   glRotatef(-80, 1, 0, 0);
   // glTranslatef(-0.65, 0.9, -1.15);
-  mallaI.drawSmooth();
+  mallaI.drawConTexturaCilindrica();
   glPopMatrix();
 }
 
@@ -410,7 +448,7 @@ void MiBrazoMecanico::K()
 
   glRotatef(40, 0, 0, 1);
   glRotatef(-80, 1, 0, 0);
-  mallaI.drawSmooth();
+  mallaI.drawConTexturaCilindrica();
   glPopMatrix();
 }
 

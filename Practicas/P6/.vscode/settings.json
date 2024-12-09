@@ -47,6 +47,7 @@
         "streambuf": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "practicasig.h": "c"
+        "practicasig.h": "c",
+        "glut.h": "c"
     }
 }

@@ -82,6 +82,7 @@ int main (int argc, char *argv[])
 // Inicializa las variables del modelo
   initModel ();
   initModelEscena();
+  initModelBrazo();
   
 
 // Inicializa las funciones de dibujo y cambio de tamanyo de la ventana X

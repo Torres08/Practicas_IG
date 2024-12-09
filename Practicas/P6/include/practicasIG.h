@@ -35,6 +35,7 @@
 #include  "visual.h"
 #include  "file_ply_stl.h"
 #include "Escena.h"
+#include "MiBrazoMecanico.h"
 
 float get_roty();
 void set_roty(float r);

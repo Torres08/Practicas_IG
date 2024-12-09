@@ -39,6 +39,8 @@ void cambioTexturaManzana(bool value);
 void setAnimacion(int a);
 int getAnimacion();	
 
+void aplicarMaterial(const MiMalla &malla);
+
 class Escena
 {
 private:
