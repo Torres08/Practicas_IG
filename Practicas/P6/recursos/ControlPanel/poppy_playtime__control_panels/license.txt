@@ -1,0 +1,11 @@
+Model Information:
+* title:	Poppy Playtime | Control Panels
+* source:	https://sketchfab.com/3d-models/poppy-playtime-control-panels-957c300192194d34abd8617f15e05723
+* author:	Xoffly (https://sketchfab.com/Xoffly)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Poppy Playtime | Control Panels" (https://sketchfab.com/3d-models/poppy-playtime-control-panels-957c300192194d34abd8617f15e05723) by Xoffly (https://sketchfab.com/Xoffly) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

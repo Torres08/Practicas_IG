@@ -44,8 +44,8 @@ public:
 
     void ComenzarAnimacionBoton();
 
-    
-
+    void PanelControlModelo(bool seleccion);
+    void LaboratorioModelo();
 };
 
 #endif // ESCENA_H

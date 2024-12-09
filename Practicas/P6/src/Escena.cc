@@ -11,6 +11,11 @@ MiMalla suelo("recursos/cubo.ply");
 MiMalla pared("recursos/cubo.ply");
 MiMalla poster("recursos/cubo.ply");
 
+MiMalla base("recursos/cubo.ply");
+MiMalla baseArriba("recursos/cubo.ply");
+MiMalla cristal("recursos/cubo.ply");
+
+
 // Botones
 GLfloat colorLuz[4] = {1.0f, 1.0f, 0.0f, 1.0f};
 Boton botonLuz(100, colorLuz);
@@ -20,8 +25,10 @@ Boton botonEscena(101, colorEscena);
 
 MiBrazoMecanico brazoMecanico;
 
+MiMalla panelControl("recursos/ControlPanel/EmergencyExitControl.ply");
+MiMalla lobo("recursos/Lobo/lobo.ply");
 
-// hacer un initModel 
+// hacer un initModel
 
 void initModelEscena()
 {
@@ -29,8 +36,47 @@ void initModelEscena()
   suelo.asignarTextura("recursos/metal.jpeg");
   pared.asignarTextura("recursos/pared.jpg");
   poster.asignarTextura("recursos/cat.jpeg");
+
+  // panelControl.asignarTextura("recursos/ControlPanel2/PanelControl.jpg");
+  //  Panel Control Metal
+  panelControl.setDiffuseReflectivity(0.5f, 0.5f, 0.5f);
+  panelControl.setSpecularReflectivity(1.0f, 1.0f, 1.0f);
+  panelControl.setAmbientReflectivity(0.3f, 0.3f, 0.3f);
+  panelControl.setShininess(128.0f);
+
+
+  cristal.setDiffuseReflectivity(0.0f, 0.0f, 0.5f); // Azul oscuro
+  cristal.setSpecularReflectivity(0.5f, 0.5f, 1.0f); // Azul claro
+  cristal.setAmbientReflectivity(0.0f, 0.0f, 0.3f); // Azul tenue
+  cristal.setShininess(100.0f);
+  cristal.setTransparency(0.1f); // Ajusta la transparencia del cristal
+
+  base.asignarTextura("recursos/base2.jpg");
+  baseArriba.asignarTextura("recursos/base.jpeg");
+
+  lobo.asignarTextura("recursos/Lobo/lobo.jpeg");
 }
 
+/**
+ * @brief Aplicar material a una malla.
+ * @param malla La malla a la que se le aplicará el material.
+ */
+void aplicarMaterial(const MiMalla &malla)
+{
+  float diffuse[3], specular[3], ambient[3];
+  std::tie(diffuse[0], diffuse[1], diffuse[2]) = malla.getDiffuseReflectivity();
+  std::tie(specular[0], specular[1], specular[2]) = malla.getSpecularReflectivity();
+  std::tie(ambient[0], ambient[1], ambient[2]) = malla.getAmbientReflectivity();
+  float shininess = malla.getShininess();
+  float transparency = malla.getTransparency(); // Obtener la transparencia
+
+
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+  glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+  glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+  glMaterialf(GL_FRONT, GL_ALPHA, transparency); 
+}
 
 bool botonAnimacionLuz = false;
 
@@ -72,113 +118,30 @@ void Escena::ComenzarAnimacionBoton()
   botonLuz.iniciarAnimacion();
 }
 
-Escena::Escena()
+void Escena::LaboratorioModelo()
 {
-
-  static GLfloat pos[4] = {0.0, 10.0, 0.0, 1.0}; // Posición de la fuente de luz 
-  float color[4] = {0.8, 0.0, 1, 1};
-  //GLfloat colorLuzDifusa[4] = {0.1f, 0.1f, 0.1f, 1.0f}; // Color oscuro difuso
-  //GLfloat colorLuzEspecular[4] = {0.1f, 0.1f, 0.1f, 1.0f}; // Color oscuro especular
-
-
-  glClearColor(0.0, 0.0, 0.0, 1.0);                   // Fija el color de fondo a negro
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Inicializa el buffer de color y el Z-Buffer
-
-  glLightfv(GL_LIGHT0, GL_POSITION, pos);
-  //glLightfv(GL_LIGHT0, GL_DIFFUSE, colorLuzDifusa);
-  //glLightfv(GL_LIGHT0, GL_SPECULAR, colorLuzEspecular);
-  glEnable(GL_LIGHT0);
-
-  
-  transformacionVisualizacion(); // Carga transformación de visualización
-  ejesCoordenadas.draw();        // Dibuja los ejes
-
-  // dibujar un plano
-}
-
-void Escena::configurarSeleccion()
-{
-  glPushAttrib(GL_ALL_ATTRIB_BITS); // Guardar el estado actual de OpenGL
-  glDisable(GL_LIGHTING);
-  glDisable(GL_DITHER);
-  glDisable(GL_TEXTURE_2D);
-  glDisable(GL_BLEND);
-  glDisable(GL_FOG);
-  glDisable(GL_MULTISAMPLE);
-}
-
-void Escena::restaurarEstado()
-{
-  glPopAttrib(); // Restaurar el estado anterior de OpenGL
-}
-
-void Escena::Escena1(bool seleccion)
-{
+  // Habitacion
   glPushMatrix();
 
-  // Boton Izquierda
-
-  /*
+  // suelo
   glPushMatrix();
-
-  glTranslatef(-5, 0, 5);
-
-  if (seleccion)
-  {
-    configurarSeleccion();
-    ColorSeleccion(botonEscena.getId());
-  }
-
-  if (getBotonAnimacionEscena())
-  {
-    botonEscena.animacion();
-  }
-  else
-  {
-    botonEscena.draw();
-  }
-
-  // Para seleccion
-  if (seleccion)
-  {
-    restaurarEstado();
-  }
-
+  GLfloat colorSuelo[4] = {0.5f, 0.5f, 0.5f, 1.0f}; // Gris
+  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorSuelo);
+  glScalef(20.0f, 0.1f, 20.0f); // Escalar el cubo para convertirlo en un plano más grande
+  glRotatef(90, 1, 0, 0);
+  suelo.drawConTextura();
   glPopMatrix();
-  */
 
-  // brazoMecanico
-  //brazoMecanico.draw();
-
-
-  glPopMatrix();
-}
-
-void Escena::Escena2(bool seleccion)
-{
-  glPushMatrix();
-
-  // Habitacion 
-
-  // suelo 
-  glPushMatrix();
-    GLfloat colorSuelo[4] = {0.5f, 0.5f, 0.5f, 1.0f}; // Gris 
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorSuelo);
-    glScalef(20.0f, 0.1f, 20.0f); // Escalar el cubo para convertirlo en un plano más grande
-    glRotatef(90, 1, 0, 0);
-    suelo.drawConTextura();
-  glPopMatrix();
-  
   // pared
   glPushMatrix();
   glRotatef(90, 0, 0, 1);
   glTranslatef(7.48, 10.05, 0);
   glPushMatrix();
-    GLfloat colorPared[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // Blanco
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorPared);
-    glScalef(15.0f, 0.1f, 20.0f); // Escalar el cubo para convertirlo en un plano más grande
-    glRotatef(90, 1, 0, 0);
-    pared.drawConTextura();
+  GLfloat colorPared[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // Blanco
+  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorPared);
+  glScalef(15.0f, 0.1f, 20.0f); // Escalar el cubo para convertirlo en un plano más grande
+  glRotatef(90, 1, 0, 0);
+  pared.drawConTextura();
   glPopMatrix();
   glPopMatrix();
 
@@ -187,11 +150,11 @@ void Escena::Escena2(bool seleccion)
   glRotatef(90, 0, 0, 1);
   glRotatef(90, 1, 0, 0);
   glPushMatrix();
-    GLfloat colorPared2[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // Blanco
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorPared2);
-    glScalef(15.0f, 0.1f, 20.0f); // Escalar el cubo para convertirlo en un plano más grande
-    glRotatef(90, 1, 0, 0);
-    pared.drawConTextura();
+  GLfloat colorPared2[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // Blanco
+  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorPared2);
+  glScalef(15.0f, 0.1f, 20.0f); // Escalar el cubo para convertirlo en un plano más grande
+  glRotatef(90, 1, 0, 0);
+  pared.drawConTextura();
   glPopMatrix();
   glPopMatrix();
 
@@ -201,16 +164,15 @@ void Escena::Escena2(bool seleccion)
   glRotatef(90, 0, 0, 1);
   glTranslatef(7.48, 10.05, 0);
   glPushMatrix();
-    GLfloat colorPared3[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // Blanco
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorPared3);
-    glScalef(15.0f, 0.1f, 20.0f); // Escalar el cubo para convertirlo en un plano más grande
-    glRotatef(90, 1, 0, 0);
-    pared.drawConTextura();
+  GLfloat colorPared3[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // Blanco
+  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorPared3);
+  glScalef(15.0f, 0.1f, 20.0f); // Escalar el cubo para convertirlo en un plano más grande
+  glRotatef(90, 1, 0, 0);
+  pared.drawConTextura();
   glPopMatrix();
   glPopMatrix();
   glPopMatrix();
 
-  //glRotatef(90, 0, 1, 0);
   glPushMatrix();
   glTranslatef(-5, 8, -9.9);
   glRotatef(90, 0, 1, 0);
@@ -223,23 +185,73 @@ void Escena::Escena2(bool seleccion)
   glPopMatrix();
   glPopMatrix();
 
+  // Base
+  glPushMatrix();
 
-  
+  glPushMatrix();
+  glTranslatef(0, 6, -3);
+  glScalef(6.0f, 0.01f, 6.0f); // Escalar el cubo para convertirlo en un plano más grande
+  glRotatef(90, 1, 0, 0);
+  baseArriba.drawConTextura();
+  glPopMatrix();
 
+  glPushMatrix();
+  glTranslatef(0, 3, -3);
+  glScalef(6,6,6);
+  base.drawConTexturaCilindrica();
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(0, 9, -3);
+  glScalef(6,6,6);
+  aplicarMaterial(cristal);
+
+  // Habilitar la mezcla de colores
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  cristal.draw();
+  glDisable(GL_BLEND);
+
+  glPopMatrix();
+
+
+  glPopMatrix();
+
+
+
+
+
+  glPopMatrix();
+}
+
+void Escena::PanelControlModelo(bool seleccion)
+{
   /* ------------------------- */
+  // Panel Control
+  glPushMatrix();
+
+  glPushMatrix();
+  glTranslatef(0, 2.8, 6);
+  glScalef(6, 6, 6);
+  glRotatef(-90, 1, 0, 0);
+  aplicarMaterial(panelControl);
+  // panelControl.drawConTexturaCoordenada();
+  panelControl.draw();
+
+  glPopMatrix();
 
   // boton luz
 
   glPushMatrix();
 
-  glTranslatef(0, 0.3, 5);
+  glTranslatef(-1.23, 4.5, 6);
+  glRotatef(45, 1, 0, 0);
 
   if (seleccion)
   {
     configurarSeleccion();
     ColorSeleccion(botonLuz.getId());
   }
-
 
   if (!getIluminacion())
   {
@@ -267,7 +279,9 @@ void Escena::Escena2(bool seleccion)
   // Boton Izquierda
   glPushMatrix();
 
-  glTranslatef(-5, 0.3, 5);
+  glTranslatef(-1.23, 3.25, 7.25);
+  glRotatef(45, 1, 0, 0);
+
   if (seleccion)
   {
     configurarSeleccion();
@@ -290,6 +304,78 @@ void Escena::Escena2(bool seleccion)
   }
 
   glPopMatrix();
+
+  glPopMatrix();
+}
+
+Escena::Escena()
+{
+
+  static GLfloat pos[4] = {0.0, 10.0, 0.0, 1.0}; // Posición de la fuente de luz
+  float color[4] = {0.8, 0.0, 1, 1};
+  // GLfloat colorLuzDifusa[4] = {0.1f, 0.1f, 0.1f, 1.0f}; // Color oscuro difuso
+  // GLfloat colorLuzEspecular[4] = {0.1f, 0.1f, 0.1f, 1.0f}; // Color oscuro especular
+
+  glClearColor(0.0, 0.0, 0.0, 1.0);                   // Fija el color de fondo a negro
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Inicializa el buffer de color y el Z-Buffer
+
+  glLightfv(GL_LIGHT0, GL_POSITION, pos);
+  // glLightfv(GL_LIGHT0, GL_DIFFUSE, colorLuzDifusa);
+  // glLightfv(GL_LIGHT0, GL_SPECULAR, colorLuzEspecular);
+  glEnable(GL_LIGHT0);
+
+  transformacionVisualizacion(); // Carga transformación de visualización
+  ejesCoordenadas.draw();        // Dibuja los ejes
+
+  // dibujar un plano
+}
+
+void Escena::configurarSeleccion()
+{
+  glPushAttrib(GL_ALL_ATTRIB_BITS); // Guardar el estado actual de OpenGL
+  glDisable(GL_LIGHTING);
+  glDisable(GL_DITHER);
+  glDisable(GL_TEXTURE_2D);
+  glDisable(GL_BLEND);
+  glDisable(GL_FOG);
+  glDisable(GL_MULTISAMPLE);
+}
+
+void Escena::restaurarEstado()
+{
+  glPopAttrib(); // Restaurar el estado anterior de OpenGL
+}
+
+void Escena::Escena1(bool seleccion)
+{
+  glPushMatrix();
+
+  LaboratorioModelo();
+  PanelControlModelo(seleccion);
+
+  /* ------------------------- */
+  glPushMatrix();
+  glTranslatef(0, 6, -1);
+  glScalef(7, 7, 7);
+  glRotatef(-90, 1, 0, 0);
+  lobo.drawConTexturaCoordenada();
+  glPopMatrix();
+
+
+  glPopMatrix();
+}
+
+void Escena::Escena2(bool seleccion)
+{
+  glPushMatrix();
+
+  LaboratorioModelo();
+  PanelControlModelo(seleccion);
+
+  /* ------------------------- */
+
+ 
+
 
   glPopMatrix();
 }

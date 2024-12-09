@@ -65,6 +65,8 @@ private:
     float specularReflectivity[3] = {0.0f, 0.0f, 0.0f};
     float ambientReflectivity[3] = {0.0f, 0.0f, 0.0f};
     float shininess = 0.0f;
+    float transparency = 1.0f; // Añadir propiedad de transparencia
+
 
     float x_min, y_min, z_min, x_max, y_max, z_max;
     float width, height, depth;
@@ -92,12 +94,14 @@ public:
     void setSpecularReflectivity(float r, float g, float b);
     void setAmbientReflectivity(float r, float g, float b);
     void setShininess(float s);
+    void setTransparency(float t);
 
     // Getter methods
     std::tuple<float, float, float> getDiffuseReflectivity() const;
     std::tuple<float, float, float> getSpecularReflectivity() const;
     std::tuple<float, float, float> getAmbientReflectivity() const;
     float getShininess() const;
+    float getTransparency() const;
 
     void calculateMinMax();
     void calculateDimensions();
@@ -110,7 +114,9 @@ public:
     void setId(int id);
 
     void drawConTextura();
-    void drawConTexturaCubo();
+    void drawConTexturaCoordenada();
+    void drawConTexturaCilindrica();
+
 };
 
 #endif // MIMALLATRIANGULO_H
