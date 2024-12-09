@@ -16,6 +16,7 @@ MiMalla baseArriba("recursos/cubo.ply");
 MiMalla cristal("recursos/cubo.ply");
 
 MiMalla manzana("recursos/apple.ply");
+MiDado dado;
 
 // Botones
 GLfloat colorLuz[4] = {1.0f, 1.0f, 0.0f, 1.0f};
@@ -23,7 +24,6 @@ Boton botonLuz(100, colorLuz);
 
 GLfloat colorEscena[4] = {0.0f, 0.0f, 1.0f, 1.0f};
 Boton botonEscena(101, colorEscena);
-
 
 GLfloat colorAccion[4] = {1.0f, 0.0f, 0.0f, 1.0f};
 Boton botonAccion(102, colorAccion);
@@ -59,6 +59,8 @@ void initModelEscena()
   baseArriba.asignarTextura("recursos/base.jpeg");
 
   lobo.asignarTextura("recursos/Lobo/lobo.jpeg");
+
+  dado.asignarTextura("recursos/dado.jpg");
 }
 
 /**
@@ -131,12 +133,31 @@ void setBotonAnimacionAccion(bool value)
   }
 }
 
-/* ------------------------------------------------------------------------------------- */
-
-void Escena::ComenzarAnimacionBoton()
+void cambioTexturaManzana(bool value)
 {
-  botonLuz.iniciarAnimacion();
+  if (value)
+  {
+    manzana.asignarTextura("recursos/madera.jpg");
+  }
+  else
+  {
+    manzana.asignarTextura("recursos/marmol.jpg");
+  }
 }
+
+int animacion = 0;
+
+void setAnimacion(int a)
+{
+  animacion = a;
+}
+
+int getAnimacion()
+{
+  return animacion;
+}
+
+/* ------------------------------------------------------------------------------------- */
 
 void Escena::LaboratorioModelo()
 {
@@ -307,11 +328,12 @@ void Escena::PanelControlModelo(bool seleccion)
 
   glPopMatrix();
 
-  // Boton Acción 
+  // Boton Acción
   glPushMatrix();
 
-  glTranslatef(-1.23, 4.5, 6);
+  glTranslatef(1.3, 3.7, 6.5);
   glRotatef(45, 1, 0, 0);
+  glScalef(1.8, 1.8, 1.8);
 
   if (seleccion)
   {
@@ -325,7 +347,7 @@ void Escena::PanelControlModelo(bool seleccion)
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorOscuro);
   }
 
-  if (getBotonAnimacionLuz())
+  if (getBotonAnimacionAccion())
   {
     botonAccion.animacion();
   }
@@ -392,11 +414,32 @@ void Escena::Escena1(bool seleccion)
 
   /* ------------------------- */
   glPushMatrix();
+
+  
+  glTranslatef(0, 6.75, -3);
+
+  if (animacion)
+  {
+    brazoMecanico.draw_animacion();
+  }
+  else
+  {
+    brazoMecanico.draw();
+  }
+  
+
+  //brazoMecanico.draw();
+
+  glPopMatrix();
+
+  /*
+  glPushMatrix();
   glTranslatef(0, 6, -1);
   glScalef(7, 7, 7);
   glRotatef(-90, 1, 0, 0);
   lobo.drawConTexturaCoordenada();
   glPopMatrix();
+  */
 
   glPopMatrix();
 }
@@ -414,16 +457,133 @@ void Escena::Escena2(bool seleccion)
   glPushMatrix();
 
   glPushMatrix();
-  glTranslatef(0, 9, -3);
-  glRotatef(get_roty(), 0, 1, 0);
-  glScalef(3, 3, 3);        // Ajusta la escala según sea necesario
-  manzana.draw();
+  // Ajusta la escala según sea necesario
+
+  // printf("Escenario Accion %d\n", getEscenarioAccion());
+  GLfloat colorManzana[4] = {1.0f, 0.0f, 0.0f, 1.0f}; // Violet
+  static bool texturaAsignada = false;
+
+  switch (getEscenarioAccion())
+  {
+  // drawFlat
+  case 1:
+    glPushMatrix();
+    glTranslatef(0, 9, -3);
+    glRotatef(get_roty(), 0, 1, 0);
+    glScalef(3, 3, 3);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorManzana);
+    manzana.draw();
+    glPopMatrix();
+    break;
+
+  // drawSmooth
+  case 2:
+    glPushMatrix();
+    glTranslatef(0, 9, -3);
+    glRotatef(get_roty(), 0, 1, 0);
+    glScalef(3, 3, 3);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorManzana);
+    manzana.drawSmooth();
+    glPopMatrix();
+    break;
+
+  //
+  case 3:
+    // Dibujar la manzana oro
+    glPushMatrix();
+    glTranslatef(0, 9, -3);
+    glRotatef(get_roty(), 0, 1, 0);
+    glScalef(3, 3, 3);
+
+    manzana.setDiffuseReflectivity(0.83f, 0.69f, 0.22f); // Oro difuso
+    manzana.setSpecularReflectivity(1.0f, 0.85f, 0.56f); // Oro especular
+    manzana.setAmbientReflectivity(0.25f, 0.20f, 0.07f); // Oro ambiente
+    manzana.setShininess(128.0f);
+
+    aplicarMaterial(manzana);
+    // Habilitar la mezcla de colores
+    manzana.drawSmooth();
+
+    glPopMatrix();
+
+    // Dibujar el cristal
+
+    break;
+
+  case 4:
+  {
+    glPushMatrix();
+    glTranslatef(0, 9, -3);
+    glRotatef(get_roty(), 0, 1, 0);
+    glScalef(3, 3, 3);
+
+    GLint prevPolygonMode[2];
+    glGetIntegerv(GL_POLYGON_MODE, prevPolygonMode);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    // Dibujar la manzana
+    GLfloat colorManzana[] = {0.0f, 1.0f, 0.0f, 1.0f}; // Violet
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorManzana);
+    manzana.drawSmooth();
+
+    glPolygonMode(GL_FRONT, prevPolygonMode[0]);
+    glPolygonMode(GL_BACK, prevPolygonMode[1]);
+    glPopMatrix();
+
+    break;
+  }
+
+  case 5:
+  {
+    glPushMatrix();
+    glTranslatef(0, 9, -3);
+    glRotatef(get_roty(), 0, 1, 0);
+    glScalef(3, 3, 3);
+
+    // mallaTaza.drawConTexturaCilindrica();
+    manzana.drawConTextura();
+
+    glPopMatrix();
+
+    break;
+  }
+  case 6:
+    glPushMatrix();
+    glTranslatef(0, 9, -3);
+    glRotatef(get_roty(), 0, 1, 0);
+    glScalef(3, 3, 3);
+
+    // mallaTaza.drawConTexturaCilindrica();
+    manzana.drawConTexturaCilindrica();
+
+    glPopMatrix();
+
+    break;
+
+  case 7:
+    // Dibujar la manzana oro
+    glPushMatrix();
+    glTranslatef(0, 0, -3);
+    glRotatef(get_roty(), 0, 1, 0);
+    glTranslatef(-1.5, 7.5, -1.5);
+    glScalef(3, 3, 3);
+
+    dado.draw();
+
+    glPopMatrix();
+    break;
+
+  default:
+    break;
+  }
+
   glPopMatrix();
 
+  glPushMatrix();
   glTranslatef(0, 9, -3);
   glScalef(6, 6, 6);
   aplicarMaterial(cristal);
-
   // Habilitar la mezcla de colores
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

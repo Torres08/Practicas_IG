@@ -14,6 +14,7 @@
 #include "boton.h"
 #include "mouse.h"
 #include "MiBrazoMecanico.h"
+#include "MiDado.h"
 
 
 extern bool botonAnimacionLuz;
@@ -33,11 +34,15 @@ void setBotonAnimacionAccion(bool value);
 
 void initModelEscena();
 
+void cambioTexturaManzana(bool value);
+
+void setAnimacion(int a);
+int getAnimacion();	
+
 class Escena
 {
 private:
     
-
 public:
     Escena();
 

@@ -643,3 +643,37 @@ void MiMalla::drawConTexturaCilindrica()
     glDisable(GL_TEXTURE_2D);
 }
 
+void MiMalla::drawSmooth()
+{
+    processVertices();
+
+    glShadeModel(GL_SMOOTH); // Establecer el modo de sombreado suave
+
+    glBegin(GL_TRIANGLES);
+
+    for (size_t i = 0; i < triangulos.size(); i++)
+    {
+        Triangulo t = triangulos[i];
+
+        Vertice v1 = vertices[t.v1];
+        Vertice v2 = vertices[t.v2];
+        Vertice v3 = vertices[t.v3];
+
+        // Establecer la normal para cada vértice
+        Normal n1 = normalesVertices[t.v1];
+        Normal n2 = normalesVertices[t.v2];
+        Normal n3 = normalesVertices[t.v3];
+
+        glNormal3f(n1.x, n1.y, n1.z);
+        glVertex3f(v1.x, v1.y, v1.z);
+
+        glNormal3f(n2.x, n2.y, n2.z);
+        glVertex3f(v2.x, v2.y, v2.z);
+
+        glNormal3f(n3.x, n3.y, n3.z);
+        glVertex3f(v3.x, v3.y, v3.z);
+    }
+
+    glEnd();
+}
+

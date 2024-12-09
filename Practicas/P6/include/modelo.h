@@ -57,6 +57,11 @@ int getIluminacion();
 
 void setIluminacion(int estado);
 
+void setEscenarioAccion(int e);
+
+int getEscenarioAccion();
+
+
 void ColorSeleccion(int id);
 
 int pick(int x, int y, int *id);

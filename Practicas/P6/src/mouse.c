@@ -133,7 +133,6 @@ void clickRaton(int boton, int estado, int x, int y)
 				}
 			}
 
-
 			if (selectedObjectId == 102)
 			{
 
@@ -141,7 +140,35 @@ void clickRaton(int boton, int estado, int x, int y)
 				setBotonAnimacionLuz(false);
 				setBotonAnimacionAccion(true);
 
-				printf("Boton Accion\n");
+				// printf("Boton Accion\n");
+
+				// printf("Escenario Accion %d\n", getEscenarioAccion());
+				if (getEscena() == 1)
+				{
+					printf("Animacion\n");
+					setAnimacion(!getAnimacion());
+					printf("Modo Animacion: %d\n", getAnimacion());
+				}
+				else
+				{
+					int siguiente_escenario = getEscenarioAccion() + 1;
+					if (siguiente_escenario > 7)
+					{
+						siguiente_escenario = 1;
+					}
+
+					if (siguiente_escenario == 6)
+					{
+						cambioTexturaManzana(true);
+					}
+
+					if (siguiente_escenario == 7)
+					{
+						cambioTexturaManzana(false);
+					}
+
+					setEscenarioAccion(siguiente_escenario);
+				}
 			}
 		}
 		else

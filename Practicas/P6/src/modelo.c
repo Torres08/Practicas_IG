@@ -44,7 +44,7 @@ Inicializa el modelo y de las variables globales
 
 **/
 
-int numeroEscena = 2;
+int numeroEscena = 1;
 int modo = GL_FILL;
 int iluminacion = 1; // encendido
 
@@ -149,6 +149,21 @@ void setIluminacion(int estado)
     glEnable(GL_LIGHT0);
   }
 }
+
+
+// Cambiar variables para el escenario 
+int escenarioAccion = 1;
+
+void setEscenarioAccion(int e)
+{
+  escenarioAccion = e;
+}
+
+int getEscenarioAccion()
+{
+  return escenarioAccion;
+}
+
 
 /**
  * @brief Color Seleccion para el raton

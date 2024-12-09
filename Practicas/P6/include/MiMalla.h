@@ -67,7 +67,6 @@ private:
     float shininess = 0.0f;
     float transparency = 1.0f; // Añadir propiedad de transparencia
 
-
     float x_min, y_min, z_min, x_max, y_max, z_max;
     float width, height, depth;
     float dim_max;
@@ -116,6 +115,7 @@ public:
     void drawConTextura();
     void drawConTexturaCoordenada();
     void drawConTexturaCilindrica();
+    void drawSmooth();
 
 };
 

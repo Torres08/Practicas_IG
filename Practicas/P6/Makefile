@@ -15,7 +15,7 @@ OBJDIR = build
 
 # Archivos fuente y sus correspondientes archivos objeto
 MODULOS = $(OBJDIR)/practicasIG.o $(OBJDIR)/entradaTeclado.o $(OBJDIR)/visual.o \
-          $(OBJDIR)/mouse.o $(OBJDIR)/modelo.o $(OBJDIR)/file_ply_stl.o $(OBJDIR)/Ejes.o $(OBJDIR)/Escena.o $(OBJDIR)/MiMalla.o $(OBJDIR)/boton.o $(OBJDIR)/lector-jpg.o $(OBJDIR)/MiBrazoMecanico.o
+          $(OBJDIR)/mouse.o $(OBJDIR)/modelo.o $(OBJDIR)/file_ply_stl.o $(OBJDIR)/Ejes.o $(OBJDIR)/Escena.o $(OBJDIR)/MiMalla.o $(OBJDIR)/boton.o $(OBJDIR)/lector-jpg.o $(OBJDIR)/MiBrazoMecanico.o $(OBJDIR)/MiDado.o
 
 # Inclusión de directorios
 INCLUDEDIR = /usr/X11R6/include
