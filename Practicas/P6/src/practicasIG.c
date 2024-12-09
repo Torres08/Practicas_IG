@@ -50,6 +50,22 @@
 	lanza los gestores de eventos	
 **/
 
+float roty = 30.0;
+
+void idle()
+{
+  roty += 0.15;
+  glutPostRedisplay();
+}
+
+float get_roty(){
+  return roty;
+}
+
+void set_roty(float r){
+  roty = r;
+}
+
 int main (int argc, char *argv[])
 {
 // Inicializa glu y openGL
@@ -78,6 +94,9 @@ int main (int argc, char *argv[])
 
   glutMouseFunc (clickRaton);
   glutMotionFunc (RatonMovido);
+
+// roty
+  glutIdleFunc(idle);
 
 // Funcion de fondo
   glutTimerFunc (30, idle, 0);

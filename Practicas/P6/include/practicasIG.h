@@ -26,6 +26,8 @@
 
 	practicasIG.h
 */
+#ifndef PRACTICASIG_H
+#define PRACTICASIG_H
 
 #include  "modelo.h"
 #include  "mouse.h"
@@ -33,3 +35,8 @@
 #include  "visual.h"
 #include  "file_ply_stl.h"
 #include "Escena.h"
+
+float get_roty();
+void set_roty(float r);
+
+#endif // PRACTICAS IG

@@ -15,6 +15,7 @@ MiMalla base("recursos/cubo.ply");
 MiMalla baseArriba("recursos/cubo.ply");
 MiMalla cristal("recursos/cubo.ply");
 
+MiMalla manzana("recursos/apple.ply");
 
 // Botones
 GLfloat colorLuz[4] = {1.0f, 1.0f, 0.0f, 1.0f};
@@ -22,6 +23,10 @@ Boton botonLuz(100, colorLuz);
 
 GLfloat colorEscena[4] = {0.0f, 0.0f, 1.0f, 1.0f};
 Boton botonEscena(101, colorEscena);
+
+
+GLfloat colorAccion[4] = {1.0f, 0.0f, 0.0f, 1.0f};
+Boton botonAccion(102, colorAccion);
 
 MiBrazoMecanico brazoMecanico;
 
@@ -44,10 +49,9 @@ void initModelEscena()
   panelControl.setAmbientReflectivity(0.3f, 0.3f, 0.3f);
   panelControl.setShininess(128.0f);
 
-
-  cristal.setDiffuseReflectivity(0.0f, 0.0f, 0.5f); // Azul oscuro
+  cristal.setDiffuseReflectivity(0.0f, 0.0f, 0.3f);  // Azul oscuro
   cristal.setSpecularReflectivity(0.5f, 0.5f, 1.0f); // Azul claro
-  cristal.setAmbientReflectivity(0.0f, 0.0f, 0.3f); // Azul tenue
+  cristal.setAmbientReflectivity(0.0f, 0.0f, 0.3f);  // Azul tenue
   cristal.setShininess(100.0f);
   cristal.setTransparency(0.1f); // Ajusta la transparencia del cristal
 
@@ -70,12 +74,11 @@ void aplicarMaterial(const MiMalla &malla)
   float shininess = malla.getShininess();
   float transparency = malla.getTransparency(); // Obtener la transparencia
 
-
   glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
   glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
   glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
   glMaterialf(GL_FRONT, GL_SHININESS, shininess);
-  glMaterialf(GL_FRONT, GL_ALPHA, transparency); 
+  glMaterialf(GL_FRONT, GL_ALPHA, transparency);
 }
 
 bool botonAnimacionLuz = false;
@@ -108,6 +111,23 @@ void setBotonAnimacionEscena(bool value)
   if (botonAnimacionEscena)
   {
     botonEscena.iniciarAnimacion();
+  }
+}
+
+bool botonAnimacionAccion = false;
+
+bool getBotonAnimacionAccion()
+{
+  return botonAnimacionAccion;
+}
+
+void setBotonAnimacionAccion(bool value)
+{
+
+  botonAnimacionAccion = value;
+  if (botonAnimacionAccion)
+  {
+    botonAccion.iniciarAnimacion();
   }
 }
 
@@ -197,29 +217,11 @@ void Escena::LaboratorioModelo()
 
   glPushMatrix();
   glTranslatef(0, 3, -3);
-  glScalef(6,6,6);
+  glScalef(6, 6, 6);
   base.drawConTexturaCilindrica();
   glPopMatrix();
 
-  glPushMatrix();
-  glTranslatef(0, 9, -3);
-  glScalef(6,6,6);
-  aplicarMaterial(cristal);
-
-  // Habilitar la mezcla de colores
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  cristal.draw();
-  glDisable(GL_BLEND);
-
   glPopMatrix();
-
-
-  glPopMatrix();
-
-
-
-
 
   glPopMatrix();
 }
@@ -305,6 +307,41 @@ void Escena::PanelControlModelo(bool seleccion)
 
   glPopMatrix();
 
+  // Boton Acción 
+  glPushMatrix();
+
+  glTranslatef(-1.23, 4.5, 6);
+  glRotatef(45, 1, 0, 0);
+
+  if (seleccion)
+  {
+    configurarSeleccion();
+    ColorSeleccion(botonAccion.getId());
+  }
+
+  if (!getIluminacion())
+  {
+    GLfloat colorOscuro[4] = {0.0f, 0.0f, 0.0f, 1.0f}; // Negro
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorOscuro);
+  }
+
+  if (getBotonAnimacionLuz())
+  {
+    botonAccion.animacion();
+  }
+  else
+  {
+    botonAccion.draw();
+  }
+
+  // Para seleccion
+  if (seleccion)
+  {
+    restaurarEstado();
+  }
+
+  glPopMatrix();
+
   glPopMatrix();
 }
 
@@ -361,7 +398,6 @@ void Escena::Escena1(bool seleccion)
   lobo.drawConTexturaCoordenada();
   glPopMatrix();
 
-
   glPopMatrix();
 }
 
@@ -374,8 +410,27 @@ void Escena::Escena2(bool seleccion)
 
   /* ------------------------- */
 
- 
+  // manzana
+  glPushMatrix();
 
+  glPushMatrix();
+  glTranslatef(0, 9, -3);
+  glRotatef(get_roty(), 0, 1, 0);
+  glScalef(3, 3, 3);        // Ajusta la escala según sea necesario
+  manzana.draw();
+  glPopMatrix();
+
+  glTranslatef(0, 9, -3);
+  glScalef(6, 6, 6);
+  aplicarMaterial(cristal);
+
+  // Habilitar la mezcla de colores
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  cristal.draw();
+
+  glDisable(GL_BLEND);
+  glPopMatrix();
 
   glPopMatrix();
 }

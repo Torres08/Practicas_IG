@@ -52,7 +52,7 @@ void initModel()
 {
 
   // camara
-  setCamara(30.0f, 0.0f, 0.0f, 30.0f);
+  setCamara(30.0f, 0.0f, 0.0f, 60.0f);
 
   glEnable(GL_DEPTH_TEST); // Habilitar el depth test
   glEnable(GL_CULL_FACE);

@@ -76,7 +76,7 @@ y:
 **/
 
 float rotxCamara = 30, rotyCamara = 0;
-float dCamara = 10;
+float dCamara = 60;
 
 void letra(unsigned char k, int x, int y)
 {

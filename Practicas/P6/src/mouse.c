@@ -110,6 +110,7 @@ void clickRaton(int boton, int estado, int x, int y)
 			{ // 100 es boton
 				setBotonAnimacionLuz(true);
 				setBotonAnimacionEscena(false);
+				setBotonAnimacionAccion(false);
 
 				setIluminacion(!getIluminacion());
 			}
@@ -120,6 +121,7 @@ void clickRaton(int boton, int estado, int x, int y)
 
 				setBotonAnimacionEscena(true);
 				setBotonAnimacionLuz(false);
+				setBotonAnimacionAccion(false);
 
 				if (getEscena() == 2)
 				{
@@ -129,6 +131,17 @@ void clickRaton(int boton, int estado, int x, int y)
 				{
 					setEscena(2);
 				}
+			}
+
+
+			if (selectedObjectId == 102)
+			{
+
+				setBotonAnimacionEscena(false);
+				setBotonAnimacionLuz(false);
+				setBotonAnimacionAccion(true);
+
+				printf("Boton Accion\n");
 			}
 		}
 		else

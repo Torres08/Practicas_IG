@@ -26,6 +26,11 @@ extern bool botonAnimacionEscena;
 bool getBotonAnimacionEscena();
 void setBotonAnimacionEscena(bool value);
 
+extern bool botonAnimacionAccion;
+
+bool getBotonAnimacionAccion();
+void setBotonAnimacionAccion(bool value);
+
 void initModelEscena();
 
 class Escena
