@@ -2,16 +2,16 @@
 /*	Prácticas de Informática Gráfica
 
     Grupos C y D				Curso 2023-24
- 	
-	Codigo base para la realización de las practicas de IG
-	
-	Estudiante: 
 
-	Programa principal
+  Codigo base para la realización de las practicas de IG
+
+  Estudiante:
+
+  Programa principal
 =======================================================
-	G. Arroyo, J.C. Torres 
-	Dpto. Lenguajes y Sistemas Informticos
-	(Univ. de Granada)
+  G. Arroyo, J.C. Torres
+  Dpto. Lenguajes y Sistemas Informticos
+  (Univ. de Granada)
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -21,95 +21,134 @@
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details 
+ GNU General Public License for more details
  http://www.gnu.org/copyleft/gpl.html
 
 =======================================================
 
-	practicasIG.c
+  practicasIG.c
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <GL/glut.h>		// Libreria de utilidades de OpenGL
+#include <GL/glut.h> // Libreria de utilidades de OpenGL
 #include "practicasIG.h"
-//#include "hiply.h"
-
-
-
+// #include "hiply.h"
 
 /*=================================================*/
 
-/**	int main( int argc, char *argv[] )	
-	Programa principal.
-	
-	Inicializa glut y openGL
-	Crea la ventana X
-	Inicializa las variables globales
-	lanza los gestores de eventos	
+/**	int main( int argc, char *argv[] )
+  Programa principal.
+
+  Inicializa glut y openGL
+  Crea la ventana X
+  Inicializa las variables globales
+  lanza los gestores de eventos
 **/
 
 float roty = 30.0;
+int lightState = 0;
+int lightChangeCounter = 0; // Contador para controlar la frecuencia del cambio
+
+
+bool changeLightEnabled = false; // Inicializa la variable global
+bool get_changeLightEnabled()
+{
+  return changeLightEnabled;
+}
+
+void set_changeLightEnabled(bool enabled)
+{
+  changeLightEnabled = enabled;
+}
+
+
+void changeLight()
+{
+  lightChangeCounter++;
+  if (lightChangeCounter >= 10) 
+  {
+    lightState = (lightState + 1) % 4; 
+
+    GLfloat light0_diffuse[][4] = {
+        {1.0, 1.0, 1.0, 1.0}, // Luz blanca
+        {1.0, 0.0, 0.0, 1.0}, // Luz roja
+        {0.0, 1.0, 0.0, 1.0}, // Luz verde
+        {0.0, 0.0, 1.0, 1.0}  // Luz azul
+    };
+
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse[lightState]);
+    glEnable(GL_LIGHT0); 
+
+    lightChangeCounter = 0; 
+  }
+
+}
 
 void idle()
 {
   roty += 0.15;
+  if (changeLightEnabled)
+  {
+    changeLight(); // Llama a la función para cambiar la luz
+  } 
+
   glutPostRedisplay();
 }
 
-float get_roty(){
+float get_roty()
+{
   return roty;
 }
 
-void set_roty(float r){
+void set_roty(float r)
+{
   roty = r;
 }
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-// Inicializa glu y openGL
-  glutInit (&argc, argv);
+  // Inicializa glu y openGL
+  glutInit(&argc, argv);
 
-// Crea una ventana X para la salida grafica en la posicion 0,0 con tamaño 800x800, con colores RGB-alfa, con doble buffer, y 
-// buffer de profundidad
+  // Crea una ventana X para la salida grafica en la posicion 0,0 con tamaño 800x800, con colores RGB-alfa, con doble buffer, y
+  // buffer de profundidad
 
-  glutInitWindowPosition (0, 0);
-  glutInitWindowSize (800, 800);
-  glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-  glutCreateWindow ("IG. Curso 2024/25. Autor: Juan Luis Torres");
+  glutInitWindowPosition(0, 0);
+  glutInitWindowSize(800, 800);
+  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+  glutCreateWindow("IG. Curso 2024/25. Autor: Juan Luis Torres");
 
-// Inicializa las variables del modelo
-  initModel ();
+  // Inicializa las variables del modelo
+  initModel();
   initModelEscena();
   initModelBrazo();
-  
 
-// Inicializa las funciones de dibujo y cambio de tamanyo de la ventana X
-  glutDisplayFunc (Dibuja);
-  glutReshapeFunc (inicializaVentana);
+  // Inicializa las funciones de dibujo y cambio de tamanyo de la ventana X
+  glutDisplayFunc(Dibuja);
+  glutReshapeFunc(inicializaVentana);
 
-// FUNCIONES DE INTERACCION
-  glutKeyboardFunc (letra);
-  glutSpecialFunc (especial);
+  // FUNCIONES DE INTERACCION
+  glutKeyboardFunc(letra);
+  glutSpecialFunc(especial);
 
-  glutMouseFunc (clickRaton);
-  glutMotionFunc (RatonMovido);
+  glutMouseFunc(clickRaton);
+  glutMotionFunc(RatonMovido);
 
-// roty
+  // roty
   glutIdleFunc(idle);
 
-// Funcion de fondo
-  glutTimerFunc (30, idle, 0);
+  // Funcion de fondo
+  glutTimerFunc(30, idle, 0);
 
-// Inicializa parametros de openGL
-  glEnable (GL_DEPTH_TEST);
-  glEnable (GL_CULL_FACE);
-  glEnable (GL_LIGHTING);
-  glEnable (GL_LIGHT0);
+  // Inicializa parametros de openGL
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
 
-
-// Lanza el gestor de eventos de glut
-  glutMainLoop ();
+  // Lanza el gestor de eventos de glut
+  glutMainLoop();
   return 0;
 }

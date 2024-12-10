@@ -40,4 +40,7 @@
 float get_roty();
 void set_roty(float r);
 
+bool get_changeLightEnabled();
+void set_changeLightEnabled(bool enabled);
+
 #endif // PRACTICAS IG

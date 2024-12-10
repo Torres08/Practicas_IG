@@ -32,12 +32,44 @@ extern bool botonAnimacionAccion;
 bool getBotonAnimacionAccion();
 void setBotonAnimacionAccion(bool value);
 
+extern bool botonAnimacionDisco;
+
+bool getBotonAnimacionDisco();
+void setBotonAnimacionDisco(bool value);
+
 void initModelEscena();
 
 void cambioTexturaManzana(bool value);
 
 void setAnimacion(int a);
 int getAnimacion();	
+
+void global_setAnguloA(float angulo);
+float global_getAnguloA();
+
+void global_setAnguloB(float angulo);
+float global_getAnguloB();
+
+void global_setAnguloC(float angulo);
+float global_getAnguloC();
+
+void global_setAnguloD(float angulo);
+float global_getAnguloD();
+
+void global_setAnguloE(float angulo);
+float global_getAnguloE();
+
+void global_setAnguloF(float angulo);
+float global_getAnguloF();
+
+void global_setAnguloG(float angulo);
+float global_getAnguloG();
+
+void global_setAnguloH(float angulo);
+float global_getAnguloH();
+
+void global_setAnguloI(float angulo);
+float global_getAnguloI();
 
 void aplicarMaterial(const MiMalla &malla);
 

@@ -67,12 +67,10 @@ void MiBrazoMecanico::setAnguloB(float angulo)
   if (angulo > 70.0f)
   {
     anguloB = 70.0f;
-    printf("El valor de anguloB no puede ser mayor que 70. Se ha ajustado a 70.\n");
   }
   else if (angulo < -70.0f)
   {
     anguloB = -70.0f;
-    printf("El valor de anguloB no puede ser menor que -70. Se ha ajustado a -70.\n");
   }
   else
   {
@@ -92,12 +90,10 @@ void MiBrazoMecanico::setAnguloD(float angulo)
   if (angulo > 70.0f)
   {
     anguloD = 70.0f;
-    printf("El valor de anguloD no puede ser mayor que 70. Se ha ajustado a 70.\n");
   }
   else if (angulo < -70.0f)
   {
     anguloD = -70.0f;
-    printf("El valor de anguloD no puede ser menor que -70. Se ha ajustado a -70.\n");
   }
   else
   {
@@ -116,12 +112,10 @@ void MiBrazoMecanico::setAnguloF(float angulo)
   if (angulo > 120.0f)
   {
     anguloF = 120.0f;
-    printf("El valor de anguloF no puede ser mayor que 120. Se ha ajustado a 120.\n");
   }
   else if (angulo < -120.0f)
   {
     anguloF = -120.0f;
-    printf("El valor de anguloD no puede ser menor que -120. Se ha ajustado a -120.\n");
   }
   else
   {
@@ -137,12 +131,10 @@ void MiBrazoMecanico::setAnguloG(float angulo)
   if (angulo < -50.0f)
   {
     anguloG = -50.0f;
-    printf("El valor de anguloG no puede ser mayor que 40. Se ha ajustado a 40.\n");
   }
   else if (angulo > 10.0f)
   {
     anguloG = 10.0f;
-    printf("El valor de anguloG no puede ser menor que -5. Se ha ajustado a -5.\n");
   }
   else
   {
@@ -156,12 +148,10 @@ void MiBrazoMecanico::setAnguloH(float angulo)
   if (angulo > 50.0f)
   {
     anguloH = 50.0f;
-    printf("El valor de anguloG no puede ser mayor que 40. Se ha ajustado a 40.\n");
   }
   else if (angulo < -10.0f)
   {
     anguloH = -10.0f;
-    printf("El valor de anguloG no puede ser menor que -5. Se ha ajustado a -5.\n");
   }
   else
   {
@@ -177,12 +167,10 @@ void MiBrazoMecanico::setAnguloI(float angulo)
   if (angulo > 0.30f)
   {
     anguloI = 0.30f;
-    printf("El valor de anguloI no puede ser mayor que 30. Se ha ajustado a 30.\n");
   }
   else if (angulo < 0.0f)
   {
     anguloI = 0.0f;
-    printf("El valor de anguloI no puede ser menor que 0. Se ha ajustado a 0.\n");
   }
   else
   {
@@ -333,7 +321,7 @@ void MiBrazoMecanico::F()
 
   glPushMatrix();
   // glRotatef(get_roty(), 0, 0, 1); // Angulo E
-  // glRotatef(anguloE, 0, 0, 1); // Angulo E
+  glRotatef(anguloE, 0, 0, 1); // Angulo E
   glRotatef(3, 0, 0, 1);
 
   mallaF.drawConTexturaCilindrica();
@@ -417,7 +405,7 @@ void MiBrazoMecanico::J()
   glPushMatrix();
 
   // glRotatef(get_roty(), 0, 1, 0); // angulo G
-  //  glRotatef(anguloG, 0, 1, 0); // angulo G
+  glRotatef(anguloG, 0, 1, 0); // angulo G
 
   glTranslatef(-0.175, 0, 0.575);
   glRotatef(-135, 0, 1, 0);
@@ -436,7 +424,7 @@ void MiBrazoMecanico::K()
 
   // glRotatef(get_roty(), 0, 1, 0); // angulo H
   //  glRotatef(anguloH,0,1,0); // angulo H
-  //  glRotatef(anguloH, 0, 1, 0); // angulo H
+  glRotatef(anguloH, 0, 1, 0); // angulo H
 
   glRotatef(180, 0, 0, 1);
   glTranslatef(-0.175, 0, 0.575);

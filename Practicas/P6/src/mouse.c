@@ -47,6 +47,8 @@ int ISINTERACTING;
 
 int selectedObjectId = -1;
 
+extern bool changeLightEnabled; // Declara la variable global
+
 void setSelectedObjectId(int id)
 {
 	selectedObjectId = id;
@@ -111,6 +113,7 @@ void clickRaton(int boton, int estado, int x, int y)
 				setBotonAnimacionLuz(true);
 				setBotonAnimacionEscena(false);
 				setBotonAnimacionAccion(false);
+				setBotonAnimacionDisco(false);
 
 				setIluminacion(!getIluminacion());
 			}
@@ -118,7 +121,7 @@ void clickRaton(int boton, int estado, int x, int y)
 			// Escena
 			if (selectedObjectId == 101)
 			{
-
+				setBotonAnimacionDisco(false);
 				setBotonAnimacionEscena(true);
 				setBotonAnimacionLuz(false);
 				setBotonAnimacionAccion(false);
@@ -135,7 +138,7 @@ void clickRaton(int boton, int estado, int x, int y)
 
 			if (selectedObjectId == 102)
 			{
-
+				setBotonAnimacionDisco(false);
 				setBotonAnimacionEscena(false);
 				setBotonAnimacionLuz(false);
 				setBotonAnimacionAccion(true);
@@ -168,6 +171,22 @@ void clickRaton(int boton, int estado, int x, int y)
 					}
 
 					setEscenarioAccion(siguiente_escenario);
+				}
+			}
+
+			// Disco
+			if (selectedObjectId == 103)
+			{
+				setBotonAnimacionDisco(true);
+				setBotonAnimacionLuz(false);
+				setBotonAnimacionEscena(false);
+				setBotonAnimacionAccion(false);
+
+				set_changeLightEnabled(!get_changeLightEnabled()); 
+
+				if (!get_changeLightEnabled())
+				{
+					setIluminacion(true);
 				}
 			}
 		}

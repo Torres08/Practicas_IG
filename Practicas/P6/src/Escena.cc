@@ -34,6 +34,9 @@ Boton botonEscena(101, colorEscena);
 GLfloat colorAccion[4] = {1.0f, 0.0f, 0.0f, 1.0f};
 Boton botonAccion(102, colorAccion);
 
+GLfloat colorDisco[4] = {0.5f, 0.0f, 0.5f, 1.0f}; // Violeta
+Boton botonDisco(103, colorDisco);
+
 MiBrazoMecanico brazoMecanico;
 
 MiMalla panelControl("recursos/ControlPanel/EmergencyExitControl.ply");
@@ -153,6 +156,119 @@ void setBotonAnimacionAccion(bool value)
     botonAccion.iniciarAnimacion();
   }
 }
+
+bool botonAnimacionDisco= false;
+
+bool getBotonAnimacionDisco()
+{
+  return botonAnimacionDisco;
+}
+
+void setBotonAnimacionDisco(bool value)
+{
+
+  botonAnimacionDisco = value;
+  if (botonAnimacionDisco)
+  {
+    botonDisco.iniciarAnimacion();
+  }
+}
+
+
+/**
+ * @brief Get y set para cambiar angulo para cada punto del brazo Mecánico
+ */
+
+void global_setAnguloA(float angulo)
+{
+  brazoMecanico.setAnguloA(angulo);
+}
+
+float global_getAnguloA()
+{
+  return brazoMecanico.getAnguloA();
+}
+
+void global_setAnguloB(float angulo)
+{
+  brazoMecanico.setAnguloB(angulo);
+}
+
+float global_getAnguloB()
+{
+  return brazoMecanico.getAnguloB();
+}
+
+void global_setAnguloC(float angulo)
+{
+  brazoMecanico.setAnguloC(angulo);
+}
+
+float global_getAnguloC()
+{
+  return brazoMecanico.getAnguloC();
+}
+
+void global_setAnguloD(float angulo)
+{
+  brazoMecanico.setAnguloD(angulo);
+}
+
+float global_getAnguloD()
+{
+  return brazoMecanico.getAnguloD();
+}
+
+void global_setAnguloE(float angulo)
+{
+  brazoMecanico.setAnguloE(angulo);
+}
+
+float global_getAnguloE()
+{
+  return brazoMecanico.getAnguloE();
+}
+
+void global_setAnguloF(float angulo)
+{
+  brazoMecanico.setAnguloF(angulo);
+}
+
+float global_getAnguloF()
+{
+  return brazoMecanico.getAnguloF();
+}
+
+void global_setAnguloG(float angulo)
+{
+  brazoMecanico.setAnguloG(angulo);
+}
+
+float global_getAnguloG()
+{
+  return brazoMecanico.getAnguloG();
+}
+
+void global_setAnguloH(float angulo)
+{
+  brazoMecanico.setAnguloH(angulo);
+}
+
+float global_getAnguloH()
+{
+  return brazoMecanico.getAnguloH();
+}
+
+void global_setAnguloI(float angulo)
+{
+  brazoMecanico.setAnguloI(angulo);
+}
+
+float global_getAnguloI()
+{
+  return brazoMecanico.getAnguloI();
+}
+
 
 void cambioTexturaManzana(bool value)
 {
@@ -449,6 +565,34 @@ void Escena::Escena1(bool seleccion)
   }
 
   // brazoMecanico.draw();
+
+  glPopMatrix();
+
+  // boton Disco
+
+  glPushMatrix();
+
+  glPushMatrix();
+
+  glTranslatef(7, 2, -3.8);
+    glScalef(1.8, 1.8, 1.8);
+  glRotatef(90, 1, 0, 0);
+
+  if (seleccion)
+  {
+    configurarSeleccion();
+    ColorSeleccion(botonDisco.getId());
+  }
+
+
+  if (getBotonAnimacionDisco())
+  {
+    botonDisco.animacion();
+  }
+  else
+  {
+    botonDisco.draw();
+  }
 
   glPopMatrix();
 

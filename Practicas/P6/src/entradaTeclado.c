@@ -115,6 +115,146 @@ void letra(unsigned char k, int x, int y)
     printf("iluminacion: %d\n", getIluminacion());
     break;
 
+  case 'q':
+    // dibujar escena 3
+    // Escena escena;
+    {
+      printf("Angulo A: %f\n", global_getAnguloA());
+      float nuevo = global_getAnguloA() - 5.0;
+      global_setAnguloA(nuevo);
+    }
+    break;
+
+  case 'Q':
+    // dibujar escena 3
+    // Escena escena;
+    {
+      printf("Angulo A: %f\n", global_getAnguloA());
+      float nuevo = global_getAnguloA() + 5.0;
+      global_setAnguloA(nuevo);
+    }
+    break;
+
+  case 'w':
+  {
+    printf("Angulo B: %f\n", global_getAnguloB());
+    float nuevo = global_getAnguloB() - 5.0;
+    global_setAnguloB(nuevo);
+  }
+  break;
+
+  case 'W':
+  {
+    printf("Angulo B: %f\n", global_getAnguloB());
+    float nuevo = global_getAnguloB() + 5.0;
+    global_setAnguloB(nuevo);
+  }
+  break;
+
+  case 'e':
+  {
+    printf("Angulo C: %f\n", global_getAnguloC());
+    float nuevo = global_getAnguloC() - 5.0;
+    global_setAnguloC(nuevo);
+  }
+  break;
+
+  case 'E':
+  {
+    printf("Angulo C: %f\n", global_getAnguloC());
+    float nuevo = global_getAnguloC() + 5.0;
+    global_setAnguloC(nuevo);
+  }
+  break;
+
+  case 'r':
+  {
+    printf("Angulo D: %f\n", global_getAnguloD());
+    float nuevo = global_getAnguloD() - 5.0;
+    global_setAnguloD(nuevo);
+  }
+  break;
+
+  case 'R':
+  {
+    printf("Angulo D: %f\n", global_getAnguloD());
+    float nuevo = global_getAnguloD() + 5.0;
+    global_setAnguloD(nuevo);
+  }
+  break;
+
+  case 't':
+  {
+    printf("Angulo E: %f\n", global_getAnguloE());
+    float nuevo = global_getAnguloE() - 5.0;
+    global_setAnguloE(nuevo);
+  }
+  break;
+
+  case 'T':
+  {
+    printf("Angulo E: %f\n", global_getAnguloE());
+    float nuevo = global_getAnguloE() + 5.0;
+    global_setAnguloE(nuevo);
+  }
+  break;
+
+  case 'y':
+  {
+    printf("Angulo F: %f\n", global_getAnguloF());
+    float nuevo = global_getAnguloF() - 5.0;
+    global_setAnguloF(nuevo);
+  }
+  break;
+
+  case 'Y':
+  {
+    printf("Angulo F: %f\n", global_getAnguloF());
+    float nuevo = global_getAnguloF() + 5.0;
+    global_setAnguloF(nuevo);
+  }
+  break;
+
+  case 'u':
+  {
+    printf("Angulo G: %f\n", global_getAnguloG());
+    float nuevo = global_getAnguloG() - 5.0;
+    global_setAnguloG(nuevo);
+
+    printf("AnguloH: %f\n", global_getAnguloH());
+    float nuevoH = global_getAnguloH() + 5.0;
+    global_setAnguloH(nuevoH);
+  }
+  break;
+
+  case 'U':
+  {
+    printf("Angulo G: %f\n", global_getAnguloG());
+    float nuevo = global_getAnguloG() + 5.0;
+    global_setAnguloG(nuevo);
+
+    printf("AnguloH: %f\n", global_getAnguloH());
+    float nuevoH = global_getAnguloH() - 5.0;
+    global_setAnguloH(nuevoH);
+  }
+  break;
+
+  case 'a':
+  {
+    printf("AnguloI: %f\n", global_getAnguloI());
+    float nuevoI = global_getAnguloI() - 0.05;
+    global_setAnguloI(nuevoI);
+  }
+  break;
+
+  case 'A':
+  {
+    printf("AnguloI: %f\n", global_getAnguloI());
+    float nuevoI = global_getAnguloI() + 0.05;
+    global_setAnguloI(nuevoI);
+  }
+  break;
+
   case 'h':
   case 'H':
     printHelp(); // H y h imprimen ayuda
