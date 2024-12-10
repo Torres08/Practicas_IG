@@ -13,7 +13,13 @@ MiMalla poster("recursos/cubo.ply");
 
 MiMalla base("recursos/cubo.ply");
 MiMalla baseArriba("recursos/cubo.ply");
+
+MiMalla estante("recursos/cubo.ply");
+MiMalla baseEstante("recursos/cubo.ply");
+
 MiMalla cristal("recursos/cubo.ply");
+
+MiMalla cristalLobo("recursos/cubo.ply");
 
 MiMalla manzana("recursos/apple.ply");
 MiDado dado;
@@ -34,7 +40,6 @@ MiMalla panelControl("recursos/ControlPanel/EmergencyExitControl.ply");
 MiMalla lobo("recursos/Lobo/lobo.ply");
 
 // hacer un initModel
-
 void initModelEscena()
 {
   printf("Iniciando Texturas .... \n");
@@ -55,12 +60,28 @@ void initModelEscena()
   cristal.setShininess(100.0f);
   cristal.setTransparency(0.1f); // Ajusta la transparencia del cristal
 
+  // Configuración del material para cristalLobo
+  
+  cristalLobo.setDiffuseReflectivity(0.0f, 0.3f, 0.3f);  // Verde oscuro
+  cristalLobo.setSpecularReflectivity(0.5f, 1.0f, 0.0f); // Verde claro
+  cristalLobo.setAmbientReflectivity(0.0f, 0.3f, 0.0f);  // Verde tenue
+  cristalLobo.setShininess(100.0f);
+  cristalLobo.setTransparency(0.1f); // Ajusta la transparencia del cristal
+  
+  suelo.setDiffuseReflectivity(0.8f, 0.8f, 0.8f);
+  suelo.setSpecularReflectivity(0, 0, 0);
+  suelo.setAmbientReflectivity(0, 0, 0);
+  suelo.setShininess(100.0f);
+
   base.asignarTextura("recursos/base2.jpg");
   baseArriba.asignarTextura("recursos/base.jpeg");
 
   lobo.asignarTextura("recursos/Lobo/lobo.jpeg");
 
   dado.asignarTextura("recursos/dado.jpg");
+
+  estante.asignarTextura("recursos/cuero.jpeg");
+  baseEstante.asignarTextura("recursos/cuero.jpeg");
 }
 
 /**
@@ -170,6 +191,7 @@ void Escena::LaboratorioModelo()
   glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorSuelo);
   glScalef(20.0f, 0.1f, 20.0f); // Escalar el cubo para convertirlo en un plano más grande
   glRotatef(90, 1, 0, 0);
+  aplicarMaterial(suelo);
   suelo.drawConTextura();
   glPopMatrix();
 
@@ -415,7 +437,6 @@ void Escena::Escena1(bool seleccion)
   /* ------------------------- */
   glPushMatrix();
 
-  
   glTranslatef(0, 6.75, -3);
 
   if (animacion)
@@ -426,20 +447,63 @@ void Escena::Escena1(bool seleccion)
   {
     brazoMecanico.draw();
   }
-  
 
-  //brazoMecanico.draw();
+  // brazoMecanico.draw();
 
   glPopMatrix();
 
-  /*
+  // estante lobo
   glPushMatrix();
-  glTranslatef(0, 6, -1);
-  glScalef(7, 7, 7);
+  glTranslatef(7, 9, -7);
+  glScalef(9, 9, 9);
   glRotatef(-90, 1, 0, 0);
   lobo.drawConTexturaCoordenada();
   glPopMatrix();
-  */
+
+  // Base Lobo
+  glPushMatrix();
+  glTranslatef(7, 0, -4);
+
+  glScalef(1, 0.75, 1);
+  glPushMatrix();
+
+  glPushMatrix();
+  glTranslatef(0, 6, -3);
+  glScalef(6.0f, 0.01f, 6.0f); // Escalar el cubo para convertirlo en un plano más grande
+  glRotatef(90, 1, 0, 0);
+  baseEstante.drawConTextura();
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(0, 3, -3);
+  glScalef(6, 6, 6);
+  estante.drawConTexturaCilindrica();
+  glPopMatrix();
+
+  glPushMatrix();
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  // Dibujar cristalLobo
+  glPushMatrix();
+  glPushMatrix();
+  glTranslatef(0, 13, -3);
+  glScalef(6, 14, 6);
+  aplicarMaterial(cristalLobo);
+  cristalLobo.draw();
+  glPopMatrix();
+
+  glPopMatrix();
+
+
+  // Deshabilitar la mezcla de colores
+  glDisable(GL_BLEND);
+
+  glPopMatrix();
+
+  glPopMatrix();
+  glPopMatrix();
 
   glPopMatrix();
 }

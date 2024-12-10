@@ -17,11 +17,9 @@ MiMalla mallaI("./recursos/Brazo/I.ply");
 MiMalla mallaE("./recursos/Brazo/C.ply");
 MiMalla mallaF("./recursos/Brazo/D.ply");
 
-
 void initModelBrazo(){
 
   // metal negro
-  
   mallaA.asignarTextura("recursos/blackDirt.jpeg");
 
   mallaB.asignarTextura("recursos/orangedirt.jpeg");
@@ -33,16 +31,14 @@ void initModelBrazo(){
   mallaE.asignarTextura("recursos/whitedirt.jpg");
 
   mallaF.asignarTextura("recursos/orangedirt.jpeg");
-
+  
   mallaG.asignarTextura("recursos/whitedirt.jpg");
 
   mallaH.asignarTextura("recursos/metal.jpg");
 
   mallaI.asignarTextura("recursos/blackDirt.jpeg");
   
-
 }
-
 
 
 MiBrazoMecanico::MiBrazoMecanico()
@@ -339,6 +335,7 @@ void MiBrazoMecanico::F()
   // glRotatef(get_roty(), 0, 0, 1); // Angulo E
   // glRotatef(anguloE, 0, 0, 1); // Angulo E
   glRotatef(3, 0, 0, 1);
+
   mallaF.drawConTexturaCilindrica();
 
   glPushMatrix();
