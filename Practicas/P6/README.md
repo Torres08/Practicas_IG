@@ -1,29 +1,35 @@
-hacer cosas con coexion 
+## Práctica 6 Final: Laboratorio
+Elementos Implementados
 
-gl light 
+He diseñado dos escenas distintas que incluyen diversas funcionalidades y animaciones:
+Primera Escena: Interacción con una Máquina Analizadora
 
-como puede simular que sea una luz 
+1. Selección Interactiva
+        Se implementó un sistema de botones interactivos, cada uno con animaciones propias. Además, se añadieron elementos translúcidos como complemento visual en los materiales.
 
-crear una nueva luz y activarla y desactivarla eso 
+2. Control de Iluminación
+        Desde el panel de control, el botón amarillo permite encender y apagar las luces de forma dinámica.
 
-tener mas claro que es eso 
+3. Primera Escena: Análisis de la Manzana
+    En la primera escena, una máquina analiza una manzana mediante el panel de control. Con el botón rojo se puede experimentar con diferentes visualizaciones y texturas:
+        - Dibujado Flat: Representación plana de la superficie.
+        - Dibujado Smooth: Representación suave de las formas.
+        - Manzana de Oro: Aplicación de textura dorada.
+        - Visión en Líneas: Representación de líneas del modelo.
+        - Textura de Madera: Texturizado con coordenadas cilíndricas.
+        - Textura de Mármol: Texturizado automático lineal de OpenGL.
+        - Transformación a Dado: Convierte la manzana en un dado.
 
-donde se le de realismo 
+4. Cambio de Escena
+        El botón azul en el panel de control permite avanzar a la segunda escena.
 
-hacer una fabrica 
+5. Segunda Escena: Brazo Mecánico y Hombre Lobo
 
-lo de la luz, 
+- Brazo Mecánico
+    - Con el botón rojo se activa una animación predeterminada del brazo mecánico. Además, es posible controlar manualmente sus 9 ejes mediante el teclado:
+        - Teclas: q, w, e, r, t, y, u, a (esta última mueve 2 ejes simultáneamente).
+        - Uso de mayúsculas para mover en una dirección y minúsculas para la dirección opuesta.
 
-enviroment texture , hacer algo , a parte de la luz 
-
-drawlfat y smooth es necesario 
-
-hacer un skybox?????
-
-simular luz invertir las normales 
-
-aplicarlo a un objeto, luego para todos 
-
-añadir extra, una nueva camara, diffuse specular, lo de la luz, camara dia y noche , nueva camara 
-
-dividir el viewport en diferentes partes , vista proyeccion, vista perfil 
+- Hombre Lobo y Efectos Especiales
+    - El escenario incluye un estante con un modelo de un hombre lobo que tiene una textura personalizada.
+    - Como detalle adicional, al presionar el botón morado ubicado en el estante, se activa un efecto especial de "discoteca".
