@@ -64,13 +64,13 @@ void initModelEscena()
   cristal.setTransparency(0.1f); // Ajusta la transparencia del cristal
 
   // Configuración del material para cristalLobo
-  
+
   cristalLobo.setDiffuseReflectivity(0.0f, 0.3f, 0.3f);  // Verde oscuro
   cristalLobo.setSpecularReflectivity(0.5f, 1.0f, 0.0f); // Verde claro
   cristalLobo.setAmbientReflectivity(0.0f, 0.3f, 0.0f);  // Verde tenue
   cristalLobo.setShininess(100.0f);
   cristalLobo.setTransparency(0.1f); // Ajusta la transparencia del cristal
-  
+
   suelo.setDiffuseReflectivity(0.8f, 0.8f, 0.8f);
   suelo.setSpecularReflectivity(0, 0, 0);
   suelo.setAmbientReflectivity(0, 0, 0);
@@ -157,7 +157,7 @@ void setBotonAnimacionAccion(bool value)
   }
 }
 
-bool botonAnimacionDisco= false;
+bool botonAnimacionDisco = false;
 
 bool getBotonAnimacionDisco()
 {
@@ -173,7 +173,6 @@ void setBotonAnimacionDisco(bool value)
     botonDisco.iniciarAnimacion();
   }
 }
-
 
 /**
  * @brief Get y set para cambiar angulo para cada punto del brazo Mecánico
@@ -269,16 +268,22 @@ float global_getAnguloI()
   return brazoMecanico.getAnguloI();
 }
 
-
-void cambioTexturaManzana(bool value)
+void cambioTexturaManzana(int value)
 {
-  if (value)
+
+  if (value == 1)
+  {
+    manzana.asignarTextura("recursos/marmol.jpg");
+  }
+
+  if (value == 2)
   {
     manzana.asignarTextura("recursos/madera.jpg");
   }
-  else
+
+  if (value == 3)
   {
-    manzana.asignarTextura("recursos/marmol.jpg");
+    manzana.asignarTextura("recursos/metal.jpg");
   }
 }
 
@@ -522,7 +527,7 @@ Escena::Escena()
   glEnable(GL_LIGHT0);
 
   transformacionVisualizacion(); // Carga transformación de visualización
-  ejesCoordenadas.draw();        // Dibuja los ejes
+  // ejesCoordenadas.draw();        // Dibuja los ejes
 
   // dibujar un plano
 }
@@ -575,7 +580,7 @@ void Escena::Escena1(bool seleccion)
   glPushMatrix();
 
   glTranslatef(7, 2, -3.8);
-    glScalef(1.8, 1.8, 1.8);
+  glScalef(1.8, 1.8, 1.8);
   glRotatef(90, 1, 0, 0);
 
   if (seleccion)
@@ -583,7 +588,6 @@ void Escena::Escena1(bool seleccion)
     configurarSeleccion();
     ColorSeleccion(botonDisco.getId());
   }
-
 
   if (getBotonAnimacionDisco())
   {
@@ -639,7 +643,6 @@ void Escena::Escena1(bool seleccion)
   glPopMatrix();
 
   glPopMatrix();
-
 
   // Deshabilitar la mezcla de colores
   glDisable(GL_BLEND);
@@ -750,7 +753,8 @@ void Escena::Escena2(bool seleccion)
     glScalef(3, 3, 3);
 
     // mallaTaza.drawConTexturaCilindrica();
-    manzana.drawConTextura();
+
+    manzana.drawConTexturaCilindrica();
 
     glPopMatrix();
 
@@ -762,14 +766,24 @@ void Escena::Escena2(bool seleccion)
     glRotatef(get_roty(), 0, 1, 0);
     glScalef(3, 3, 3);
 
-    // mallaTaza.drawConTexturaCilindrica();
-    manzana.drawConTexturaCilindrica();
+    manzana.drawConTextura();
 
     glPopMatrix();
 
     break;
 
   case 7:
+    glPushMatrix();
+    glTranslatef(0, 9, -3);
+    glRotatef(get_roty(), 0, 1, 0);
+    glScalef(3, 3, 3);
+
+    manzana.drawConTextura();
+
+    glPopMatrix();
+    break;
+
+  case 8:
     // Dibujar la manzana oro
     glPushMatrix();
     glTranslatef(0, 0, -3);

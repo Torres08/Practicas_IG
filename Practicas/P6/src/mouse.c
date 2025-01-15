@@ -102,10 +102,8 @@ void clickRaton(int boton, int estado, int x, int y)
 			}
 			*/
 
-			printf("Selected object ID: %d\n", id);
+			// printf("Selected object ID: %d\n", id);
 			selectedObjectId = id;
-
-			// aqui es donde habilito y deshabilito la luz
 
 			// Luz
 			if (selectedObjectId == 100)
@@ -121,6 +119,7 @@ void clickRaton(int boton, int estado, int x, int y)
 			// Escena
 			if (selectedObjectId == 101)
 			{
+
 				setBotonAnimacionDisco(false);
 				setBotonAnimacionEscena(true);
 				setBotonAnimacionLuz(false);
@@ -128,10 +127,12 @@ void clickRaton(int boton, int estado, int x, int y)
 
 				if (getEscena() == 2)
 				{
+					printf("Cambio a Escena 1\n");
 					setEscena(1);
 				}
 				else
 				{
+					printf("Cambio a Escena 2\n");
 					setEscena(2);
 				}
 			}
@@ -150,24 +151,48 @@ void clickRaton(int boton, int estado, int x, int y)
 				{
 					printf("Animacion\n");
 					setAnimacion(!getAnimacion());
-					printf("Modo Animacion: %d\n", getAnimacion());
+					// printf("Modo Animacion: %d\n", getAnimacion());
 				}
 				else
 				{
+					/*
+
+					*/
 					int siguiente_escenario = getEscenarioAccion() + 1;
-					if (siguiente_escenario > 7)
+					if (siguiente_escenario > 8)
 					{
 						siguiente_escenario = 1;
 					}
 
-					if (siguiente_escenario == 6)
+					switch (siguiente_escenario)
 					{
-						cambioTexturaManzana(true);
-					}
-
-					if (siguiente_escenario == 7)
-					{
-						cambioTexturaManzana(false);
+					case 1:
+						printf("Dibujado Flat\n");
+						break;
+					case 2:
+						printf("Dibujado Smooth\n");
+						break;
+					case 3:
+						printf("Material Oro\n");
+						break;
+					case 4:
+						printf("Dibujado con lineas\n");
+						break;
+					case 5:
+						printf("Texturizado Cilíndrico\n");
+						cambioTexturaManzana(1);
+						break;
+					case 6:
+						printf("Texturizado Automatica lineal de OpenGL\n");
+						cambioTexturaManzana(2);
+						break;
+					case 7:
+						printf("Texturizado Esférico\n");
+						cambioTexturaManzana(3);
+						break;
+					case 8:
+						printf("Dado\n");
+						break;
 					}
 
 					setEscenarioAccion(siguiente_escenario);
@@ -177,12 +202,13 @@ void clickRaton(int boton, int estado, int x, int y)
 			// Disco
 			if (selectedObjectId == 103)
 			{
+				printf("Discoteca\n");
 				setBotonAnimacionDisco(true);
 				setBotonAnimacionLuz(false);
 				setBotonAnimacionEscena(false);
 				setBotonAnimacionAccion(false);
 
-				set_changeLightEnabled(!get_changeLightEnabled()); 
+				set_changeLightEnabled(!get_changeLightEnabled());
 
 				if (!get_changeLightEnabled())
 				{

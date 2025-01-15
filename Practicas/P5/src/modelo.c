@@ -745,7 +745,7 @@ public:
     // Dado
     glPushMatrix();
 
-    glRotatef(-get_roty(), 0, 1, 0);
+    //glRotatef(-get_roty(), 0, 1, 0);
 
     glTranslatef(-0.5, -0.5, -0.5);
 

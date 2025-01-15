@@ -115,8 +115,8 @@ public:
     void drawConTextura();
     void drawConTexturaCoordenada();
     void drawConTexturaCilindrica();
+    void drawConTexturaEsferica();
     void drawSmooth();
-
 };
 
 #endif // MIMALLATRIANGULO_H

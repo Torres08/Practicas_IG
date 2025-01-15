@@ -57,7 +57,7 @@ MiMalla::MiMalla(const char *filename)
 
     for (size_t i = 0; i < temp_texturas.size(); i += 2)
     {
-        
+
         CoordenadaTextura ct;
         ct.s = temp_texturas[i];
         ct.t = temp_texturas[i + 1];
@@ -191,7 +191,7 @@ void MiMalla::draw()
         ambientReflectivity[2] = diffuseReflectivity[2];
     }
 
-    glShadeModel(GL_SMOOTH); // Establecer el modo de sombreado suave por defecto 
+    glShadeModel(GL_SMOOTH); // Establecer el modo de sombreado suave por defecto
 
     glBegin(GL_TRIANGLES); // Iniciar el dibujo de triángulos
 
@@ -221,8 +221,6 @@ void MiMalla::draw()
 
     glEnd(); // Finalizar el dibujo
 }
-
-
 
 /**
  * @brief Establece la reflectividad difusa del material.
@@ -449,7 +447,6 @@ void MiMalla::setId(int _id)
     id = _id;
 };
 
-
 /**
  * @brief Dibuja la malla con textura esférica. (otra forma que no he optado)
  */
@@ -466,7 +463,6 @@ void MiMalla::drawConTextura()
         ambientReflectivity[1] = diffuseReflectivity[1];
         ambientReflectivity[2] = diffuseReflectivity[2];
     }
-
 
     // Configurar la generación automática de coordenadas de textura
     glEnable(GL_TEXTURE_GEN_S);
@@ -510,7 +506,6 @@ void MiMalla::drawConTextura()
     glDisable(GL_TEXTURE_GEN_T);
     glDisable(GL_TEXTURE_2D);
 }
-
 
 void MiMalla::drawConTexturaCoordenada()
 {
@@ -566,7 +561,6 @@ void MiMalla::drawConTexturaCoordenada()
 
     glDisable(GL_TEXTURE_2D);
 }
-
 
 /**
  * @brief Dibuja la malla con textura cilíndrica.
@@ -643,6 +637,86 @@ void MiMalla::drawConTexturaCilindrica()
     glDisable(GL_TEXTURE_2D);
 }
 
+/**
+ * @brief Dibuja la malla con textura esferica.
+ */
+void MiMalla::drawConTexturaEsferica()
+{
+    processVertices();
+
+    // Si no se ha asignado reflectividad ambiente, usar la reflectividad difusa
+    if (ambientReflectivity[0] == 0.0f && ambientReflectivity[1] == 0.0f && ambientReflectivity[2] == 0.0f)
+    {
+        ambientReflectivity[0] = diffuseReflectivity[0];
+        ambientReflectivity[1] = diffuseReflectivity[1];
+        ambientReflectivity[2] = diffuseReflectivity[2];
+    }
+
+    // Calcular minY y maxY
+    float minY = std::numeric_limits<float>::max();
+    float maxY = std::numeric_limits<float>::lowest();
+    for (const auto &vertice : vertices)
+    {
+        if (vertice.y < minY)
+            minY = vertice.y;
+        if (vertice.y > maxY)
+            maxY = vertice.y;
+    }
+
+    // Calcular el centro geométrico de la malla
+    float centerX = (x_min + x_max) / 2.0f;
+    float centerY = (y_min + y_max) / 2.0f;
+    float centerZ = (z_min + z_max) / 2.0f;
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texId);
+
+    glShadeModel(GL_SMOOTH); // Establecer el modo de sombreado suave
+
+    glBegin(GL_TRIANGLES);
+    for (size_t i = 0; i < triangulos.size(); i++)
+    {
+        Triangulo t = triangulos[i];
+
+        Vertice v1 = vertices[t.v1];
+        Vertice v2 = vertices[t.v2];
+        Vertice v3 = vertices[t.v3];
+
+        // Establecer la normal para cada vértice
+        Normal n1 = normalesVertices[t.v1];
+        Normal n2 = normalesVertices[t.v2];
+        Normal n3 = normalesVertices[t.v3];
+
+        // Calcular coordenadas de textura esféricas
+        float r1 = sqrt(pow(v1.x - centerX, 2) + pow(v1.y - centerY, 2) + pow(v1.z - centerZ, 2)); // radio
+        float u1 = 0.5f + atan2(v1.z - centerZ, v1.x - centerX) / (2 * M_PI);                      // Plano XY
+        float v1_tex = 0.5f - asin((v1.y - centerY) / r1) / M_PI;                                  // Plano Y
+
+        float r2 = sqrt(pow(v2.x - centerX, 2) + pow(v2.y - centerY, 2) + pow(v2.z - centerZ, 2));
+        float u2 = 0.5f + atan2(v2.z - centerZ, v2.x - centerX) / (2 * M_PI);
+        float v2_tex = 0.5f - asin((v2.y - centerY) / r2) / M_PI;
+
+        float r3 = sqrt(pow(v3.x - centerX, 2) + pow(v3.y - centerY, 2) + pow(v3.z - centerZ, 2));
+        float u3 = 0.5f + atan2(v3.z - centerZ, v3.x - centerX) / (2 * M_PI);
+        float v3_tex = 0.5f - asin((v3.y - centerY) / r3) / M_PI;
+
+        glNormal3f(n1.x, n1.y, n1.z);
+        glTexCoord2f(u1, v1_tex);
+        glVertex3f(v1.x, v1.y, v1.z);
+
+        glNormal3f(n2.x, n2.y, n2.z);
+        glTexCoord2f(u2, v2_tex);
+        glVertex3f(v2.x, v2.y, v2.z);
+
+        glNormal3f(n3.x, n3.y, n3.z);
+        glTexCoord2f(u3, v3_tex);
+        glVertex3f(v3.x, v3.y, v3.z);
+    }
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);
+}
+
 void MiMalla::drawSmooth()
 {
     processVertices();
@@ -676,4 +750,3 @@ void MiMalla::drawSmooth()
 
     glEnd();
 }
-

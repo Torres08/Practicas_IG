@@ -44,7 +44,7 @@ Inicializa el modelo y de las variables globales
 
 **/
 
-int numeroEscena = 1;
+int numeroEscena = 2;
 int modo = GL_FILL;
 int iluminacion = 1; // encendido
 
@@ -135,12 +135,11 @@ void setIluminacion(int estado)
     glLightfv(GL_LIGHT0, GL_DIFFUSE, colorLuzDifusa);
     glLightfv(GL_LIGHT0, GL_SPECULAR, colorLuzEspecular);
     glEnable(GL_LIGHT0);
-  
   }
   else
   {
     printf("Iluminacion apagada\n");
-   
+
     float color[4] = {0.8, 0.0, 1, 1};
     GLfloat colorLuzDifusa[4] = {0.1f, 0.1f, 0.1f, 1.0f};    // Color oscuro difuso
     GLfloat colorLuzEspecular[4] = {0.1f, 0.1f, 0.1f, 1.0f}; // Color oscuro especular
@@ -150,8 +149,7 @@ void setIluminacion(int estado)
   }
 }
 
-
-// Cambiar variables para el escenario 
+// Cambiar variables para el escenario
 int escenarioAccion = 1;
 
 void setEscenarioAccion(int e)
@@ -164,7 +162,6 @@ int getEscenarioAccion()
   return escenarioAccion;
 }
 
-
 /**
  * @brief Color Seleccion para el raton
  * @param id id del objeto seleccionado
@@ -172,7 +169,7 @@ int getEscenarioAccion()
  */
 void ColorSeleccion(int id)
 {
-  printf("Color seleccion: %d\n", id);
+  // printf("Color seleccion: %d\n", id);
   unsigned char r = (id & 0xFF);
   glColor3ub(r, 0, 0);
 }
@@ -220,9 +217,8 @@ void dibujoEscena(bool seleccion)
   glPushMatrix();
 
   Escena escena;
-  
-  glEnable(GL_LIGHTING);
 
+  glEnable(GL_LIGHTING);
 
   switch (numeroEscena)
   {

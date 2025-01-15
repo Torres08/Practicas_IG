@@ -17,7 +17,8 @@ MiMalla mallaI("./recursos/Brazo/I.ply");
 MiMalla mallaE("./recursos/Brazo/C.ply");
 MiMalla mallaF("./recursos/Brazo/D.ply");
 
-void initModelBrazo(){
+void initModelBrazo()
+{
 
   // metal negro
   mallaA.asignarTextura("recursos/blackDirt.jpeg");
@@ -31,15 +32,13 @@ void initModelBrazo(){
   mallaE.asignarTextura("recursos/whitedirt.jpg");
 
   mallaF.asignarTextura("recursos/orangedirt.jpeg");
-  
+
   mallaG.asignarTextura("recursos/whitedirt.jpg");
 
   mallaH.asignarTextura("recursos/metal.jpg");
 
   mallaI.asignarTextura("recursos/blackDirt.jpeg");
-  
 }
-
 
 MiBrazoMecanico::MiBrazoMecanico()
 {
@@ -185,9 +184,9 @@ void MiBrazoMecanico::A()
   // 1. Set up, poner la figura en el medio
   // glTranslatef(0.35, 0.2, 0);
   glScaled(2, 2, 2);
-  //mallaA.drawSmooth();
-  
-  //aplicarMaterial(mallaA);
+  // mallaA.drawSmooth();
+
+  // aplicarMaterial(mallaA);
   mallaA.drawConTexturaCilindrica();
 
   glPopMatrix();
@@ -207,8 +206,8 @@ void MiBrazoMecanico::B()
   glRotatef(anguloA, 0, 0, 1);
 
   // glTranslatef(0, 0.55, -0.5);
-  //aplicarMaterial(mallaB);
-  //mallaB.drawSmooth();
+  // aplicarMaterial(mallaB);
+  // mallaB.drawSmooth();
   mallaB.drawConTexturaCilindrica();
 
   // colocar C en B sin rotacion de C ni de -90
@@ -245,7 +244,7 @@ void MiBrazoMecanico::C()
   glRotatef(anguloB, 1, 0, 0);
   glRotatef(-11, 0, 0, 1);
   aplicarMaterial(mallaC);
-  //mallaC.drawSmooth();
+  // mallaC.drawSmooth();
   mallaC.drawConTexturaCilindrica();
 
   glPushMatrix();
@@ -303,7 +302,7 @@ void MiBrazoMecanico::D()
   // glRotatef(anguloC, 0, 0, 1); // Angulo C
 
   glRotatef(3, 0, 0, 1);
-  //mallaD.drawSmooth();
+  // mallaD.drawSmooth();
   mallaD.drawConTexturaCilindrica();
   glPopMatrix();
 
@@ -469,12 +468,10 @@ void MiBrazoMecanico::draw()
 
   glPushMatrix();
 
-  
   A();
   glTranslatef(0, 0, 1.2); // mirandolo sin rotated -90
 
   B();
-  
 
   // animacion(); // aqui va bien
 
@@ -483,8 +480,8 @@ void MiBrazoMecanico::draw()
   // C();
   // D();
   // E();
-  //F();
-  //G();
+  // F();
+  // G();
   // I();
   //  J();
 

@@ -39,7 +39,7 @@ void setBotonAnimacionDisco(bool value);
 
 void initModelEscena();
 
-void cambioTexturaManzana(bool value);
+void cambioTexturaManzana(int value);
 
 void setAnimacion(int a);
 int getAnimacion();	
