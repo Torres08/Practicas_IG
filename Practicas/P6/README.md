@@ -33,3 +33,7 @@ Primera Escena: Interacción con una Máquina Analizadora
 - Hombre Lobo y Efectos Especiales
     - El escenario incluye un estante con un modelo de un hombre lobo que tiene una textura personalizada.
     - Como detalle adicional, al presionar el botón morado ubicado en el estante, se activa un efecto especial de "discoteca".
+  
+## Ejemplo de Animación
+
+![Ejemplo de Animación](./recursos/ejemplo.gif)
